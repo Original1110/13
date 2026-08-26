@@ -135,22 +135,6 @@
             تأكد من إغلاق الإنترنت بعد اكتمال التخزين 100%
         </div>
     </div>
-
-    <script>
-        var statusMsg = document.getElementById('statusMsg');
-
-if (window.applicationCache) {
-    window.applicationCache.addEventListener('error', function(e) {
-        statusMsg.style.color = '#ff4d4d';
-        statusMsg.innerHTML = 'فشل التحميل! تحقق من MIME Type للسيرفر أو وجود جميع الملفات في مجلد patches.';
-    }, false);
-
-    window.applicationCache.addEventListener('cached', function() {
-        statusMsg.style.color = '#00ff88';
-        statusMsg.innerHTML = 'تم الحفظ بنجاح! افصل النت واختبر الصفحة.';
-    }, false);
-}
-    </script>
     <script>
 // فحص وتفعيل التخزين المؤقت للأوفلاين
 if ('serviceWorker' in navigator) {
