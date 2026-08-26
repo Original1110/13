@@ -380,36 +380,14 @@ body::after {
   };
 </script>
 
-<!-- تحميل ملفات البيئة الأساسية -->
+<!-- تحميل ملفات البيئة الأساسية بالتتابع -->
 <script src="int64.js"></script>
 <script src="mem.js"></script>
 <script src="ps4_offsets.js"></script>
 <script src="core.js"></script>
 <script src="chain_lapse.js"></script>
 
-<script>
-  var exploitTimer = setTimeout(function() {
-    if (typeof poopsError === "function") {
-      poopsError("توقف الاستغلال (Freeze) - أعد فتح المتصفح");
-    }
-  }, 30000);
-
-  // تشغيل آمن يتأكد من جاهزية الـ Memory والأوفسيتس قبل استدعاء chain_poops
-  window.addEventListener("load", function() {
-    setTimeout(function() {
-      try {
-        var script = document.createElement("script");
-        // إضافة timestamp لتفادي الكاش التالف
-        script.src = "chain_poops.js?v=" + new Date().getTime();
-        script.onerror = function() {
-          poopsError("تعذر تحميل ملف chain_poops.js من السيرفر/الكاش");
-        };
-        document.body.appendChild(script);
-      } catch (e) {
-        poopsError("خطأ في التحميل: " + e.message);
-      }
-    }, 500);
-  });
-</script>
+<!-- استدعاء chain_poops بشكل مباشر وتقليدي معتمد من WebKit -->
+<script src="chain_poops.js"></script>
 </body>
 </html>
