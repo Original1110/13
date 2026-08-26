@@ -119,7 +119,7 @@
         <h1>PS4 Host Exploit</h1>
         <div class="subtitle">شركة أورجينال لصيانة البلايستيشن - أسيوط</div>
 
-        <div class="status-box" id="statusMsg">جاري التحقق من كاش الأوفلاين...</div>
+        <div class="status-box" id="statusMsg">جاري الاتصال بالسيرفر...</div>
 
         <div class="progress-bar-container">
             <div class="progress-bar" id="progressBar"></div>
@@ -132,7 +132,7 @@
         </div>
 
         <div class="footer">
-            احفظ الصفحة في المفضلة (Bookmarks) لفتحها أوفلاين بسرعة
+            احفظ الصفحة في المفضلة (Bookmarks) لفتحها أوفلاين
         </div>
     </div>
 
@@ -144,51 +144,45 @@
             var appCache = window.applicationCache;
 
             appCache.addEventListener('checking', function() {
-                statusMsg.innerText = 'جاري تفحص ملف cache.manifest...';
+                statusMsg.innerText = 'جاري التحقق من كاش النظام...';
             }, false);
 
             appCache.addEventListener('downloading', function() {
-                statusMsg.innerText = 'بدأ تنزيل ملفات الأوفلاين...';
+                statusMsg.innerText = 'جاري تنزيل الملفات للأوفلاين...';
             }, false);
 
             appCache.addEventListener('progress', function(e) {
                 if (e.total > 0) {
                     var percent = Math.round((e.loaded / e.total) * 100);
                     progressBar.style.width = percent + '%';
-                    statusMsg.innerText = 'جاري التحميل: ' + percent + '% (' + e.loaded + '/' + e.total + ')';
-                } else {
-                    statusMsg.innerText = 'جاري تحضير الملفات...';
+                    statusMsg.innerText = 'جاري التخزين: ' + percent + '% (' + e.loaded + '/' + e.total + ')';
                 }
             }, false);
 
             appCache.addEventListener('cached', function() {
                 progressBar.style.width = '100%';
                 statusMsg.style.color = '#00ff88';
-                statusMsg.innerText = 'تم التخزين بنجاح! يمكنك الاستخدام بدون إنترنت.';
+                statusMsg.innerText = 'تم التخزين بنجاح! يمكن الاستخدام أوفلاين الآن.';
             }, false);
 
             appCache.addEventListener('noupdate', function() {
                 progressBar.style.width = '100%';
-                statusMsg.innerText = 'الصفحة مخزنة ومحدثة مسبقاً (Offline Ready)';
+                statusMsg.style.color = '#00ff88';
+                statusMsg.innerText = 'الصفحة مخزنة ومحدثة أوفلاين (Offline Ready)';
             }, false);
 
             appCache.addEventListener('updateready', function() {
-                window.applicationCache.swapCache();
+                try {
+                    window.applicationCache.swapCache();
+                } catch(e) {}
                 statusMsg.innerText = 'تم التحديث! جاري إعادة التحميل...';
                 window.location.reload();
             }, false);
 
             appCache.addEventListener('error', function(e) {
                 statusMsg.style.color = '#ff4d4d';
-                statusMsg.innerText = 'حدث خطأ أثناء قراءة الكاش من GitHub.';
+                statusMsg.innerText = 'حدث خطأ في قراءة ملف cache.manifest من GitHub.';
             }, false);
-
-            // إجبار المتصفح على الفحص فور التمييز
-            try {
-                appCache.update();
-            } catch (err) {}
-        } else {
-            statusMsg.innerText = 'المتصفح لا يدعم AppCache.';
         }
     </script>
 </body>
