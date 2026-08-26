@@ -1,4 +1,6 @@
-const CACHE_NAME = 'ps4-exploit-v1';
+const CACHE_NAME = 'ps4-original-host-v2';
+
+// القائمة الكاملة لجميع ملفات الثغرة
 const ASSETS = [
     './',
     './index.html',
@@ -20,18 +22,24 @@ const ASSETS = [
     './patches/1300.bin'
 ];
 
-self.addEventListener('install', (e) => {
-    e.waitUntil(
-        caches.open(CACHE_NAME).then((cache) => {
+self.addEventListener('install', function(event) {
+    event.waitUntil(
+        caches.open(CACHE_NAME).then(function(cache) {
             return cache.addAll(ASSETS);
+        }).then(function() {
+            return self.skipWaiting();
         })
     );
 });
 
-self.addEventListener('fetch', (e) => {
-    e.respondWith(
-        caches.match(e.request).then((response) => {
-            return response || fetch(e.request);
+self.addEventListener('activate', function(event) {
+    event.waitUntil(self.clients.claim());
+});
+
+self.addEventListener('fetch', function(event) {
+    event.respondWith(
+        caches.match(event.request, { ignoreSearch: true }).then(function(response) {
+            return response || fetch(event.request);
         })
     );
 });
