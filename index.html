@@ -359,23 +359,39 @@ body::after {
     }
   };
 
-  window.poopsError = function () {
+  window.poopsError = function (msg) {
     if (loader) loader.classList.remove("done");
     if (state) state.classList.add("error");
     if (stateText) {
       stateText.innerHTML =
-        "حدث خطأ أثناء التنفيذ<br>" +
-        "<small>Something went wrong...</small>";
+        (msg ? msg : "فشل تشغيل الثغرة - توقف التكرار") + "<br>" +
+        "<small>Stopped automatic retries.</small>";
     }
   };
 </script>
 
+<!-- تحميل الأساسيات أولاً -->
 <script src="int64.js"></script>
 <script src="mem.js"></script>
 <script src="ps4_offsets.js"></script>
 <script src="core.js"></script>
+
+<!-- استدعاء chain_lapse ثم poops بمهلة زمنية قصيرة لتفادي التعليق -->
 <script src="chain_lapse.js"></script>
-<script src="chain_poops.js"></script>
+<script>
+  // منع السكربت الداخلي من عمل Auto Reload عند الفشل
+  window.onbeforeunload = null;
+
+  // تشغيل chain_poops بعد اكتمال تهيئة الذاكرة من core و lapse
+  setTimeout(function() {
+    var script = document.createElement("script");
+    script.src = "chain_poops.js";
+    script.onerror = function() {
+      if (typeof poopsError === "function") poopsError("عفواً: تعذر تحميل ملف chain_poops.js");
+    };
+    document.body.appendChild(script);
+  }, 300);
+</script>
 
 </body>
 </html>
