@@ -1,12 +1,25 @@
 CACHE MANIFEST
-# Test Version 1.1
+# Version 3.0
 
 CACHE:
+cache.manifest
 index.html
+run_lapse.html
 PS4_13.00_Webkit.html
+chain_lapse.js
+chain_poops.js
+sysctl.html
+sysctl.js
 core.js
 mem.js
 int64.js
+ps4_offsets.js
+rpc_worker.js
+payload.bin
+patches/1100.bin
+patches/1150.bin
+patches/1200.bin
+patches/1300.bin
 
 NETWORK:
 *
