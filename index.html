@@ -135,15 +135,62 @@
             تأكد من إغلاق الإنترنت بعد اكتمال التخزين 100%
         </div>
     </div>
+
     <script>
-// فحص وتفعيل التخزين المؤقت للأوفلاين
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./sw.js').then(function(reg) {
-        console.log('Offline Cache Ready!', reg);
-    }).catch(function(err) {
-        console.log('Offline Cache Failed: ', err);
-    });
-}
-</script>
+        var statusMsg = document.getElementById('statusMsg');
+        var progressBar = document.getElementById('progressBar');
+
+        if (window.applicationCache) {
+            var appCache = window.applicationCache;
+
+            appCache.addEventListener('checking', function() {
+                statusMsg.innerText = 'جاري الفحص لملفات الأوفلاين...';
+            }, false);
+
+            appCache.addEventListener('downloading', function() {
+                statusMsg.innerText = 'جاري تنزيل الملفات للأوفلاين من GitHub...';
+            }, false);
+
+            appCache.addEventListener('progress', function(e) {
+                if (e.total > 0) {
+                    var percent = Math.round((e.loaded / e.total) * 100);
+                    progressBar.style.width = percent + '%';
+                    statusMsg.innerText = 'جاري التحميل: ' + percent + '% (' + e.loaded + '/' + e.total + ')';
+                }
+            }, false);
+
+            appCache.addEventListener('cached', function() {
+                progressBar.style.width = '100%';
+                statusMsg.style.color = '#00ff88';
+                statusMsg.innerText = 'تم التخزين بنجاح! يمكنك الاستخدام بدون إنترنت الآن.';
+            }, false);
+
+            appCache.addEventListener('updateready', function() {
+                if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
+                    window.applicationCache.swapCache();
+                    statusMsg.innerText = 'تم تحديث الكاش بنجاح! جاري إعادة التحميل...';
+                    window.location.reload();
+                }
+            }, false);
+
+            appCache.addEventListener('noupdate', function() {
+                progressBar.style.width = '100%';
+                statusMsg.innerText = 'الصفحة مخزنة ومحدثة مسبقاً (Offline Ready)';
+            }, false);
+
+            appCache.addEventListener('error', function(e) {
+                statusMsg.style.color = '#ff4d4d';
+                statusMsg.innerText = 'فشل التخزين! تأكد من رفع كافّة الملفات المذكورة في cache.manifest';
+                console.error('Cache Error Details:', e);
+            }, false);
+
+            appCache.addEventListener('obsolete', function() {
+                statusMsg.style.color = '#ff9900';
+                statusMsg.innerText = 'ملف Manifest غير موجود على GitHub (404)!';
+            }, false);
+        } else {
+            statusMsg.innerText = 'المتصفح لا يدعم AppCache.';
+        }
+    </script>
 </body>
 </html>
