@@ -366,54 +366,48 @@ body::after {
     if (state) state.classList.add("error");
     if (stateText) {
       stateText.innerHTML =
-        (msg ? msg : "توقفت الثغرة - أعد فتح المتصفح") + "<br>" +
-        "<small>Execution stopped.</small>";
+        (msg ? msg : "حدث خطأ في السكربت") + "<br>" +
+        "<small>Script Execution Error</small>";
     }
   };
-</script>
 
-<!-- تحميل ملفات الاعتماد الأساسية -->
-<script src="int64.js"></script>
-<script src="mem.js"></script>
-<script src="ps4_offsets.js"></script>
-<script src="core.js"></script>
-
-<script>
-  // مؤقت أمان لمدة 25 ثانية لمنع تجمد الواجهة نهائياً
-  var exploitTimer = setTimeout(function() {
+  // التقاط دقيق للخطأ مع عرض السطر والملف المسبب
+  window.onerror = function(msg, url, lineNo) {
+    var fileName = url ? url.substring(url.lastIndexOf('/') + 1) : "Script";
     if (typeof poopsError === "function") {
-      poopsError("توقف الاستغلال (Freeze) - أعد فتح المتصفح");
-    }
-  }, 25000);
-
-  // التقاط الأخطاء غير المعالجة وطباعتها مباشرة
-  window.onerror = function(msg) {
-    if (typeof poopsError === "function") {
-      poopsError("خطأ في السكربت: " + msg);
+      poopsError("خطأ: " + msg + " (" + fileName + ":" + lineNo + ")");
     }
     return true;
   };
 </script>
 
+<!-- تحميل الأساسيات بالتتابع الصحيح -->
+<script src="int64.js"></script>
+<script src="mem.js"></script>
+<script src="ps4_offsets.js"></script>
+<script src="core.js"></script>
 <script src="chain_lapse.js"></script>
 
 <script>
-  // استدعاء ملف poops ديناميكياً
-  try {
-    var script = document.createElement("script");
-    script.src = "chain_poops.js";
-    script.onerror = function() {
-      if (typeof poopsError === "function") {
-        poopsError("تعذر تحميل ملف chain_poops.js من الكاش");
-      }
-    };
-    document.body.appendChild(script);
-  } catch (e) {
+  var exploitTimer = setTimeout(function() {
     if (typeof poopsError === "function") {
-      poopsError("خطأ في بيئة تشغيل الثغرة");
+      poopsError("تأخرت الاستجابة - أعد فتح الصفحة");
     }
-  }
-</script>
+  }, 25000);
 
+  // تأخير استدعاء poops لمدة 350ms لضمان اكتمال تهيئة core و lapse
+  setTimeout(function() {
+    try {
+      var script = document.createElement("script");
+      script.src = "chain_poops.js";
+      script.onerror = function() {
+        poopsError("تعذر تحميل ملف chain_poops.js من الكاش");
+      };
+      document.body.appendChild(script);
+    } catch (e) {
+      poopsError("خطأ أثناء استدعاء الثغرة: " + e.message);
+    }
+  }, 350);
+</script>
 </body>
 </html>
