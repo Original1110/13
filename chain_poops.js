@@ -6,12 +6,6 @@ import { installWindowP, pairStatus } from "./mem.js";
 import { int64 } from "./int64.js";
 import { offsetsFor } from "./ps4_offsets.js";
 
-const establishPrimitive = window.establishPrimitive;
-const installWindowP = window.installWindowP;
-const pairStatus = window.pairStatus;
-const int64 = window.int64;
-const offsetsFor = window.offsetsFor
-
 const outEl = document.getElementById("out");
 const stateEl = document.getElementById("state");
 const lines = [];
