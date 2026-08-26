@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html manifest="cache.manifest">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -119,7 +119,7 @@
         <h1>PS4 Host Exploit</h1>
         <div class="subtitle">شركة أورجينال لصيانة البلايستيشن - أسيوط</div>
 
-        <div class="status-box" id="statusMsg">جاري تجهيز التخزين التلقائي...</div>
+        <div class="status-box" id="statusMsg">جاري مزامنة كاش النظام...</div>
 
         <div class="progress-bar-container">
             <div class="progress-bar" id="progressBar"></div>
@@ -132,7 +132,7 @@
         </div>
 
         <div class="footer">
-            تأكد من إغلاق الإنترنت بعد اكتمال التخزين 100%
+            احفظ الصفحة في المفضلة (Bookmarks) لفتحها أوفلاين بسرعة
         </div>
     </div>
 
@@ -140,68 +140,33 @@
         var statusMsg = document.getElementById('statusMsg');
         var progressBar = document.getElementById('progressBar');
 
-        var CACHE_NAME = 'ps4-original-host-v1';
-        var filesToCache = [
-            './',
-            'index.html',
-            'PS4_13.00_Webkit.html',
-            'run_lapse.html',
-            'sysctl.html',
-            'chain_lapse.js',
-            'chain_poops.js',
-            'sysctl.js',
-            'core.js',
-            'mem.js',
-            'int64.js',
-            'ps4_offsets.js',
-            'rpc_worker.js',
-            'payload.bin',
-            'patches/1100.bin',
-            'patches/1150.bin',
-            'patches/1200.bin',
-            'patches/1300.bin'
-        ];
+        if (window.applicationCache) {
+            var appCache = window.applicationCache;
 
-        function startManualCache() {
-            if ('caches' in window) {
-                caches.open(CACHE_NAME).then(function(cache) {
-                    var loaded = 0;
-                    var total = filesToCache.length;
+            appCache.addEventListener('cached', function() {
+                progressBar.style.width = '100%';
+                statusMsg.style.color = '#00ff88';
+                statusMsg.innerText = 'تم تسجيل الكاش بنجاح! الصفحة جاهزة للأوفلاين.';
+            }, false);
 
-                    statusMsg.innerText = 'جاري حفظ الملفات للأوفلاين (0/' + total + ')...';
+            appCache.addEventListener('noupdate', function() {
+                progressBar.style.width = '100%';
+                statusMsg.innerText = 'الصفحة مخزنة ومحدثة أوفلاين (Offline Ready)';
+            }, false);
 
-                    var cachePromises = filesToCache.map(function(file) {
-                        return fetch(file).then(function(response) {
-                            if (!response.ok) {
-                                throw new Error('فشل تحميل: ' + file);
-                            }
-                            return cache.put(file, response).then(function() {
-                                loaded++;
-                                var percent = Math.round((loaded / total) * 100);
-                                progressBar.style.width = percent + '%';
-                                statusMsg.innerText = 'جاري التحميل: ' + percent + '% (' + loaded + '/' + total + ')';
-                            });
-                        });
-                    });
+            appCache.addEventListener('progress', function(e) {
+                if (e.total > 0) {
+                    var percent = Math.round((e.loaded / e.total) * 100);
+                    progressBar.style.width = percent + '%';
+                    statusMsg.innerText = 'جاري حفظ النظام: ' + percent + '%';
+                }
+            }, false);
 
-                    Promise.all(cachePromises).then(function() {
-                        progressBar.style.width = '100%';
-                        statusMsg.style.color = '#00ff88';
-                        statusMsg.innerText = 'تم التخزين بنجاح! يمكنك إغلاق النت والاستخدام أوفلاين.';
-                    }).catch(function(err) {
-                        statusMsg.style.color = '#ff4d4d';
-                        statusMsg.innerText = 'خطأ أثناء التخزين: ' + err.message;
-                    });
-                });
-            } else {
-                statusMsg.style.color = '#ff9900';
-                statusMsg.innerText = 'متصفحك لا يدعم Cache Storage.';
-            }
+            appCache.addEventListener('updateready', function() {
+                window.applicationCache.swapCache();
+                window.location.reload();
+            }, false);
         }
-
-        window.onload = function() {
-            startManualCache();
-        };
     </script>
 </body>
 </html>
