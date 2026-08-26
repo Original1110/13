@@ -346,13 +346,13 @@ body::after {
 
 <script>
   const loader = document.getElementById("loader");
-  const state = document.getElementById("state");
+  const hostState = document.getElementById("hostState");
   const stateText = document.getElementById("stateText");
 
   window.poopsDone = function () {
     if (typeof exploitTimer !== "undefined") clearTimeout(exploitTimer);
     if (loader) loader.classList.add("done");
-    if (state) state.classList.add("done");
+    if (hostState) hostState.classList.add("done"); // تم التعديل هنا
     if (stateText) {
       stateText.innerHTML =
         "اكتملت العملية بنجاح<br>" +
@@ -363,7 +363,7 @@ body::after {
   window.poopsError = function (msg) {
     if (typeof exploitTimer !== "undefined") clearTimeout(exploitTimer);
     if (loader) loader.classList.remove("done");
-    if (state) state.classList.add("error");
+    if (hostState) hostState.classList.add("error"); // تم التعديل هنا
     if (stateText) {
       stateText.innerHTML =
         (msg ? msg : "حدث خطأ أثناء تشغيل الثغرة") + "<br>" +
