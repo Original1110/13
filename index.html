@@ -25,7 +25,7 @@
         <h1>PS4 Host Exploit</h1>
         <div class="subtitle">شركة أورجينال لصيانة البلايستيشن - أسيوط</div>
 
-        <div class="status-box" id="statusMsg">جاري تحضير ملفات التخزين...</div>
+        <div class="status-box" id="statusMsg">جاري تحضير حفظ الملفات...</div>
 
         <div class="progress-bar-container">
             <div class="progress-bar" id="progressBar"></div>
@@ -45,68 +45,81 @@
     <script>
         var filesToCache = [
             './',
-            './index.html',
-            './PS4_13.00_Webkit.html',
-            './run_lapse.html',
-            './sysctl.html',
-            './chain_lapse.js',
-            './chain_poops.js',
-            './sysctl.js',
-            './core.js',
-            './mem.js',
-            './int64.js',
-            './ps4_offsets.js',
-            './rpc_worker.js'
+            'index.html',
+            'PS4_13.00_Webkit.html',
+            'run_lapse.html',
+            'sysctl.html',
+            'chain_lapse.js',
+            'chain_poops.js',
+            'sysctl.js',
+            'core.js',
+            'mem.js',
+            'int64.js',
+            'ps4_offsets.js',
+            'rpc_worker.js',
+            'payload.bin',
+            'patches/1100.bin',
+            'patches/1150.bin',
+            'patches/1200.bin',
+            'patches/1300.bin'
         ];
 
         var statusMsg = document.getElementById('statusMsg');
         var progressBar = document.getElementById('progressBar');
 
-        async function cacheHostFiles() {
+        // تفعيل الـ Service Worker لربط الملفات أوفلاين
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./sw.js').then(function() {
+                console.log('SW Registered');
+            }).catch(function(e) {
+                console.log('SW Error', e);
+            });
+        }
+
+        async function cacheAllFilesStrictly() {
             if (!('caches' in window)) {
-                statusMsg.innerText = 'التخزين التلقائي جاهز عبر المتصفح.';
+                statusMsg.innerText = 'المتصفح لا يدعم ذاكرة الكاش المباشرة.';
                 return;
             }
 
             try {
-                var cache = await caches.open('ps4-exploit-original');
+                var cache = await caches.open('ps4-original-host-v2');
                 var loaded = 0;
                 var total = filesToCache.length;
 
-                statusMsg.innerText = 'جاري حفظ الملفات أوفلاين...';
-
                 for (var i = 0; i < filesToCache.length; i++) {
-                    try {
-                        await cache.add(filesToCache[i]);
-                    } catch (e) {
-                        // يتجاوز أي ملف مفقود دون إيقاف العملية كاملة
-                        console.warn('تجاوز ملف: ' + filesToCache[i]);
+                    var file = filesToCache[i];
+                    statusMsg.innerText = 'جاري تحميل: ' + file;
+                    
+                    var response = await fetch(file);
+                    if (!response.ok) {
+                        throw new Error('الملف غير موجود (404): ' + file);
                     }
+                    await cache.put(file, response);
+
                     loaded++;
                     var percent = Math.round((loaded / total) * 100);
                     progressBar.style.width = percent + '%';
-                    statusMsg.innerText = 'جاري التخزين: ' + percent + '% (' + loaded + '/' + total + ')';
                 }
 
                 progressBar.style.width = '100%';
                 statusMsg.style.color = '#00ff88';
-                statusMsg.innerText = 'تم التخزين بنجاح! يمكنك الاستخدام بدون إنترنت الآن.';
-                localStorage.setItem('ps4_cached', 'true');
+                statusMsg.innerText = 'تم حفظ جميع ملفات الثغرة (100%)! جاهز للأوفلاين.';
+                localStorage.setItem('ps4_full_cached', 'true');
 
             } catch (err) {
-                progressBar.style.width = '100%';
-                statusMsg.style.color = '#00ff88';
-                statusMsg.innerText = 'الصفحة جاهزة للاستخدام الأوفلاين';
+                statusMsg.style.color = '#ff4d4d';
+                statusMsg.innerText = 'فشل التحميل: ' + err.message;
             }
         }
 
         window.onload = function() {
-            if (localStorage.getItem('ps4_cached') === 'true') {
+            if (localStorage.getItem('ps4_full_cached') === 'true') {
                 progressBar.style.width = '100%';
                 statusMsg.style.color = '#00ff88';
-                statusMsg.innerText = 'الصفحة مخزنة ومحدثة أوفلاين (Offline Ready)';
+                statusMsg.innerText = 'تم حفظ جميع ملفات الثغرة (100%)! جاهز للأوفلاين.';
             } else {
-                cacheHostFiles();
+                cacheAllFilesStrictly();
             }
         };
     </script>
