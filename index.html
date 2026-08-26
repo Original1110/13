@@ -136,57 +136,91 @@
         </div>
     </div>
 
-    <script>
+   <script>
     var statusMsg = document.getElementById('statusMsg');
     var progressBar = document.getElementById('progressBar');
+
+    // القائمة المراد التحقق منها يدويًا في حال فشل AppCache
+    var filesToCheck = [
+        'index.html',
+        'PS4_13.00_Webkit.html',
+        'run_lapse.html',
+        'sysctl.html',
+        'chain_lapse.js',
+        'chain_poops.js',
+        'sysctl.js',
+        'core.js',
+        'mem.js',
+        'int64.js',
+        'ps4_offsets.js',
+        'rpc_worker.js',
+        'payload.bin',
+        'patches/1100.bin',
+        'patches/1150.bin',
+        'patches/1200.bin',
+        'patches/1300.bin'
+    ];
+
+    function checkFilesOneByOne() {
+        statusMsg.innerText = 'جاري تفحص الملفات المفقودة...';
+        var missingFiles = [];
+        var checkedCount = 0;
+
+        filesToCheck.forEach(function(file) {
+            fetch(file, { method: 'HEAD' }).then(function(response) {
+                if (!response.ok) {
+                    missingFiles.push(file);
+                }
+            }).catch(function() {
+                missingFiles.push(file);
+            }).finally(function() {
+                checkedCount++;
+                if (checkedCount === filesToCheck.length) {
+                    if (missingFiles.length > 0) {
+                        statusMsg.style.color = '#ff4d4d';
+                        statusMsg.innerHTML = 'الملفات التالية غير موجودة (404):<br>' + missingFiles.join('<br>');
+                    } else {
+                        statusMsg.style.color = '#ff9900';
+                        statusMsg.innerText = 'جميع الملفات موجودة بالسيرفر! المشكلة في استجابة المتصفح للـ Manifest.';
+                    }
+                }
+            });
+        });
+    }
 
     if (window.applicationCache) {
         var appCache = window.applicationCache;
 
         appCache.addEventListener('checking', function() {
-            statusMsg.innerText = 'جاري الفحص لملفات الأوفلاين...';
+            statusMsg.innerText = 'جاري الفحص...';
         }, false);
 
         appCache.addEventListener('downloading', function() {
-            statusMsg.innerText = 'جاري تنزيل الملفات للأوفلاين من GitHub...';
+            statusMsg.innerText = 'جاري تنزيل الملفات للأوفلاين...';
         }, false);
 
         appCache.addEventListener('progress', function(e) {
             if (e.total > 0) {
                 var percent = Math.round((e.loaded / e.total) * 100);
                 progressBar.style.width = percent + '%';
-                statusMsg.innerText = 'جاري التحميل: ' + percent + '% (' + e.loaded + '/' + e.total + ')';
+                statusMsg.innerText = 'جاري التحميل: ' + percent + '%';
             }
         }, false);
 
         appCache.addEventListener('cached', function() {
             progressBar.style.width = '100%';
             statusMsg.style.color = '#00ff88';
-            statusMsg.innerText = 'تم التخزين بنجاح! يمكنك الاستخدام بدون إنترنت الآن.';
-        }, false);
-
-        appCache.addEventListener('updateready', function() {
-            if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
-                window.applicationCache.swapCache();
-                statusMsg.innerText = 'تم تحديث الكاش بنجاح!';
-                window.location.reload();
-            }
+            statusMsg.innerText = 'تم التخزين بنجاح! يمكنك الاستخدام أوفلاين الآن.';
         }, false);
 
         appCache.addEventListener('noupdate', function() {
             progressBar.style.width = '100%';
-            statusMsg.innerText = 'الصفحة مخزنة ومحدثة مسبقاً (Offline Ready)';
+            statusMsg.innerText = 'الصفحة مخزنة جاهزة (Offline Ready)';
         }, false);
 
-        // طباعة تفاصيل الملف المسبب للخطأ
         appCache.addEventListener('error', function(e) {
-            statusMsg.style.color = '#ff4d4d';
-            statusMsg.innerText = 'فشل التحميل! افحص متصفح F12 في الـ PC لتعرف أي ملف يرجع 404.';
-        }, false);
-
-        appCache.addEventListener('obsolete', function() {
-            statusMsg.style.color = '#ff9900';
-            statusMsg.innerText = 'ملف cache.manifest غير موجود (404)!';
+            // عند حدوث خطأ، قم بفحص الملفات فوراً للتعرف على السبب
+            checkFilesOneByOne();
         }, false);
     }
 </script>
