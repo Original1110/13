@@ -138,59 +138,18 @@
 
     <script>
         var statusMsg = document.getElementById('statusMsg');
-        var progressBar = document.getElementById('progressBar');
 
-        if (window.applicationCache) {
-            var appCache = window.applicationCache;
+if (window.applicationCache) {
+    window.applicationCache.addEventListener('error', function(e) {
+        statusMsg.style.color = '#ff4d4d';
+        statusMsg.innerHTML = 'فشل التحميل! تحقق من MIME Type للسيرفر أو وجود جميع الملفات في مجلد patches.';
+    }, false);
 
-            appCache.addEventListener('checking', function() {
-                statusMsg.innerText = 'جاري الفحص لملفات الأوفلاين...';
-            }, false);
-
-            appCache.addEventListener('downloading', function() {
-                statusMsg.innerText = 'جاري تنزيل الملفات للأوفلاين...';
-            }, false);
-
-            appCache.addEventListener('progress', function(e) {
-                if (e.total > 0) {
-                    var percent = Math.round((e.loaded / e.total) * 100);
-                    progressBar.style.width = percent + '%';
-                    statusMsg.innerText = 'جاري التحميل: ' + percent + '% (' + e.loaded + '/' + e.total + ')';
-                }
-            }, false);
-
-            appCache.addEventListener('cached', function() {
-                progressBar.style.width = '100%';
-                statusMsg.style.color = '#00ff88';
-                statusMsg.innerText = 'تم التخزين بنجاح! يمكنك الاستخدام بدون إنترنت الآن.';
-            }, false);
-
-            appCache.addEventListener('updateready', function() {
-                if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
-                    window.applicationCache.swapCache();
-                    statusMsg.innerText = 'تم تحديث الكاش بنجاح! إعادة تحميل...';
-                    window.location.reload();
-                }
-            }, false);
-
-            appCache.addEventListener('noupdate', function() {
-                progressBar.style.width = '100%';
-                statusMsg.innerText = 'الصفحة مخزنة ومحدثة مسبقاً (Offline Ready)';
-            }, false);
-
-            appCache.addEventListener('error', function(e) {
-                statusMsg.style.color = '#ff4d4d';
-                statusMsg.innerText = 'فشل التخزين! تأكد من ملف cache.manifest والروابط.';
-                console.error('Cache Error Details:', e);
-            }, false);
-
-            appCache.addEventListener('obsolete', function() {
-                statusMsg.style.color = '#ff9900';
-                statusMsg.innerText = 'ملف Manifest غير موجود (404)!';
-            }, false);
-        } else {
-            statusMsg.innerText = 'متصفحك لا يدعم AppCache.';
-        }
+    window.applicationCache.addEventListener('cached', function() {
+        statusMsg.style.color = '#00ff88';
+        statusMsg.innerHTML = 'تم الحفظ بنجاح! افصل النت واختبر الصفحة.';
+    }, false);
+}
     </script>
 </body>
 </html>
