@@ -1,26 +1,12 @@
 CACHE MANIFEST
-# Manifest Version: 2026-08-26-v2
-# Hashes can be kept here as comments on separate lines if needed
+# Test Version 1.1
 
 CACHE:
-/index.html
-/run_lapse.html
-/PS4_13.00_Webkit.html
-/chain_lapse.js
-/chain_poops.js
-/sysctl.html
-/sysctl.js
-/core.js
-/mem.js
-/int64.js
-/ps4_offsets.js
-/rpc_worker.js
-/preview.png
-/payload.bin
-/patches/1100.bin
-/patches/1150.bin
-/patches/1200.bin
-/patches/1300.bin
+index.html
+PS4_13.00_Webkit.html
+core.js
+mem.js
+int64.js
 
 NETWORK:
 *
