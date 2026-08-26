@@ -151,5 +151,15 @@ if (window.applicationCache) {
     }, false);
 }
     </script>
+    <script>
+// فحص وتفعيل التخزين المؤقت للأوفلاين
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js').then(function(reg) {
+        console.log('Offline Cache Ready!', reg);
+    }).catch(function(err) {
+        console.log('Offline Cache Failed: ', err);
+    });
+}
+</script>
 </body>
 </html>
