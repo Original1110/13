@@ -1,13 +1,13 @@
 CACHE MANIFEST
-# v1.0.0
+# GitHub Host Version 1.0
 
 CACHE:
 index.html
-PS4_13.00_Webkit.html
 run_lapse.html
-sysctl.html
+PS4_13.00_Webkit.html
 chain_lapse.js
 chain_poops.js
+sysctl.html
 sysctl.js
 core.js
 mem.js
@@ -15,6 +15,10 @@ int64.js
 ps4_offsets.js
 rpc_worker.js
 payload.bin
+patches/1100.bin
+patches/1150.bin
+patches/1200.bin
+patches/1300.bin
 
 NETWORK:
 *
