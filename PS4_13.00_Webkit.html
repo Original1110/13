@@ -345,12 +345,15 @@ body::after {
 </div>
 
 <!-- 1. ربط الدوال أولاً قبل تنفيذ الثغرة -->
+<!-- 1. ربط الدوال وتهيئة النظام قبل تحميل السكربتات -->
 <script>
   const loader = document.getElementById("loader");
   const state = document.getElementById("state");
   const stateText = document.getElementById("stateText");
 
+  // دالة النجاح
   window.poopsDone = function () {
+    if (window.autoRetryTimer) clearTimeout(window.autoRetryTimer);
     if (loader) loader.classList.add("done");
     if (state) state.classList.add("done");
     if (stateText) {
@@ -360,24 +363,64 @@ body::after {
     }
   };
 
-  window.poopsError = function () {
+  // دالة الفشل
+  window.poopsError = function (msg) {
+    if (window.autoRetryTimer) clearTimeout(window.autoRetryTimer);
     if (loader) loader.classList.remove("done");
     if (state) state.classList.add("error");
     if (stateText) {
       stateText.innerHTML =
-        "حدث خطأ أثناء التنفيذ<br>" +
-        "<small>Something went wrong...</small>";
+        (msg ? msg : "حدث خطأ أثناء التنفيذ") + "<br>" +
+        "<small>Reloading in 3 seconds...</small>";
     }
+    // إعادة تحميل تلقائية بعد 3 ثواني عند حدوث خطأ صريح
+    setTimeout(function() {
+      location.reload();
+    }, 3000);
   };
+
+  // مؤقت أمان: إعادة التحميل التلقائي إذا علق المتصفح أكثر من 12 ثانية
+  window.autoRetryTimer = setTimeout(function() {
+    if (stateText && stateText.innerText.indexOf("اكتملت") === -1) {
+      if (state) state.classList.add("error");
+      if (stateText) {
+        stateText.innerHTML = "تعذر تشغيل الثغرة.. جارٍ إعادة المحاولة تلقائياً<br><small>Retrying automatically...</small>";
+      }
+      setTimeout(function() {
+        location.reload();
+      }, 1500);
+    }
+  }, 12000); // 12 ثانية كحد أقصى للتنفيذ
 </script>
 
-<!-- 2. تحميل ملفات الاعتماد الخاصة بالثغرة بترتيبها الصحيح -->
-<script src="int64.js"></script>
-<script src="mem.js"></script>
-<script src="ps4_offsets.js"></script>
-<script src="core.js"></script>
-<script src="chain_lapse.js"></script>
-<script src="chain_poops.js"></script>
+<!-- 2. تحميل ملفات الاعتماد الخاصة بالثغرة -->
+<script src="int64.js" onerror="poopsError('فشل تحميل int64.js');"></script>
+<script src="mem.js" onerror="poopsError('فشل تحميل mem.js');"></script>
+<script src="ps4_offsets.js" onerror="poopsError('فشل تحميل ps4_offsets.js');"></script>
+<script src="core.js" onerror="poopsError('فشل تحميل core.js');"></script>
+<script src="chain_lapse.js" onerror="poopsError('فشل تحميل chain_lapse.js');"></script>
+<script src="chain_poops.js" onerror="poopsError('فشل تحميل chain_poops.js');"></script>
+
+<!-- 3. تشغيل الـ Payload تلقائياً بعد اكتمال التحميل -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // محاولة إطلاق الثغرة تلقائياً حسب الدالة المعرفة في chain_poops / chain_lapse
+    setTimeout(function() {
+      try {
+        if (typeof run === "function") {
+          run();
+        } else if (typeof main === "function") {
+          main();
+        } else if (typeof poc === "function") {
+          poc();
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }, 200);
+  });
+</script>
+
 
 </body>
 </html>
