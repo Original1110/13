@@ -137,53 +137,23 @@
     </div>
 
     <script>
-        var statusMsg = document.getElementById('statusMsg');
-        var progressBar = document.getElementById('progressBar');
+    var statusMsg = document.getElementById('statusMsg');
+    var progressBar = document.getElementById('progressBar');
 
-        if (window.applicationCache) {
-            var appCache = window.applicationCache;
-
-            appCache.addEventListener('checking', function() {
-                statusMsg.innerText = 'جاري التحقق من كاش النظام...';
-            }, false);
-
-            appCache.addEventListener('downloading', function() {
-                statusMsg.innerText = 'جاري تنزيل الملفات للأوفلاين...';
-            }, false);
-
-            appCache.addEventListener('progress', function(e) {
-                if (e.total > 0) {
-                    var percent = Math.round((e.loaded / e.total) * 100);
-                    progressBar.style.width = percent + '%';
-                    statusMsg.innerText = 'جاري التخزين: ' + percent + '% (' + e.loaded + '/' + e.total + ')';
-                }
-            }, false);
-
-            appCache.addEventListener('cached', function() {
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js')
+            .then(function(reg) {
                 progressBar.style.width = '100%';
                 statusMsg.style.color = '#00ff88';
-                statusMsg.innerText = 'تم التخزين بنجاح! يمكن الاستخدام أوفلاين الآن.';
-            }, false);
-
-            appCache.addEventListener('noupdate', function() {
-                progressBar.style.width = '100%';
-                statusMsg.style.color = '#00ff88';
-                statusMsg.innerText = 'الصفحة مخزنة ومحدثة أوفلاين (Offline Ready)';
-            }, false);
-
-            appCache.addEventListener('updateready', function() {
-                try {
-                    window.applicationCache.swapCache();
-                } catch(e) {}
-                statusMsg.innerText = 'تم التحديث! جاري إعادة التحميل...';
-                window.location.reload();
-            }, false);
-
-            appCache.addEventListener('error', function(e) {
+                statusMsg.innerText = 'تم التخزين أوفلاين بنجاح عبر Service Worker!';
+            })
+            .catch(function(err) {
                 statusMsg.style.color = '#ff4d4d';
-                statusMsg.innerText = 'حدث خطأ في قراءة ملف cache.manifest من GitHub.';
-            }, false);
-        }
-    </script>
+                statusMsg.innerText = 'فشل تسجيل الكاش: ' + err;
+            });
+    } else {
+        statusMsg.innerText = 'المتصفح لا يدعم Service Worker.';
+    }
+</script>
 </body>
 </html>
