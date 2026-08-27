@@ -1050,46 +1050,30 @@ body::after {
 </div>
 
 
-<script type="module">
+<!-- استدعاء الملفات بالترتيب المتسلسل التقليدي -->
+<script src="int64.js"></script>
+<script src="mem.js"></script>
+<script src="ps4_offsets.js"></script>
+<script src="core.js"></script>
+<script src="chain_lapse.js"></script>
+<script src="chain_poops.js"></script>
 
-import "./chain_poops.js";
-
-
-const loader =
-  document.getElementById("loader");
-
-const state =
-  document.getElementById("state");
-
-const stateText =
-  document.getElementById("stateText");
-
+<script>
+const loader = document.getElementById("loader");
+const state = document.getElementById("state");
+const stateText = document.getElementById("stateText");
 
 window.poopsDone = function () {
-
   loader.classList.add("done");
-
   state.classList.add("done");
-
-  stateText.innerHTML =
-    "اكتملت العملية بنجاح<br>" +
-    "<small>Done successfully...</small>";
-
+  stateText.innerHTML = "اكتملت العملية بنجاح<br><small>Done successfully...</small>";
 };
 
-
-window.poopsError = function () {
-
+window.poopsError = function (msg) {
   loader.classList.remove("done");
-
   state.classList.add("error");
-
-  stateText.innerHTML =
-    "حدث خطأ أثناء التنفيذ<br>" +
-    "<small>Something went wrong...</small>";
-
+  stateText.innerHTML = (msg ? msg : "حدث خطأ أثناء التنفيذ") + "<br><small>Something went wrong...</small>";
 };
-
 </script>
 
 
