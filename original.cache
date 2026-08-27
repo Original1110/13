@@ -1,6 +1,7 @@
 CACHE MANIFEST
-# GitHub Pages Version: 5.0.0
+# GitHub Pages Version: 5.0.1
 
+CACHE:
 index.html
 PS4_13.00_Webkit.html
 run_lapse.html
@@ -21,6 +22,3 @@ patches/1300.bin
 
 NETWORK:
 *
-
-SETTINGS:
-prefer-online
