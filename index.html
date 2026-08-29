@@ -6,16 +6,16 @@
 <title>ORIGINAL | PS4 Exploit Host</title>
 <style>
     :root {
-        --bg-grad-1: #1a1c1e;
-        --bg-grad-2: #0d0e10;
-        --panel-bg: rgba(30, 34, 38, 0.75);
-        --border-glass: rgba(255, 255, 255, 0.08);
-        --accent: #00d2ff;
+        /* الألوان الرئيسية (تم تعديلها لتتناسب مع الخلفية الجديدة) */
+        --bg-overlay: rgba(13, 14, 16, 0.85); /* طبقة داكنة فوق الصورة و blur */
+        --panel-bg: rgba(30, 34, 38, 0.65); /* تأثير زجاجي شفاف */
+        --border-glass: rgba(255, 255, 255, 0.06);
+        --accent: #00d2ff; /* أزرق سماوي مضيء */
         --accent-glow: rgba(0, 210, 255, 0.3);
         --text-main: #f0f3f6;
         --text-sub: #9ba3af;
-        --card-bg: rgba(24, 27, 31, 0.6);
-        --card-active: rgba(0, 210, 255, 0.12);
+        --card-bg: rgba(24, 27, 31, 0.5);
+        --card-active: rgba(0, 210, 255, 0.1);
         --card-border-active: #00d2ff;
     }
 
@@ -27,13 +27,32 @@
     }
 
     body {
-        background: radial-gradient(circle at center, var(--bg-grad-1) 0%, var(--bg-grad-2) 100%);
+        /* --- إضافة الخلفية التقنية الحصرية هنا --- */
+        /* الصورة مدمجة بكود Base64 داخل ملف الـ CSS مباشرة */
+        background-image: 
+            linear-gradient(var(--bg-overlay), var(--bg-overlay)), /* طبقة تعتيم */
+            url("data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAMCAgICAgMCAgIDAwMDBAYEBAQEBAgGBgUGCQgKCgkICQkKDA8MCgsOCwkJDRENDg8QEBEQCgwSExIQEw8QEBD/2wBDAQMDAwQDBAgEBAgQCwkLEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBD/wAARCAKAA8ADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwE4VLAtBAAAAAAAAAAAAEDBAFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2N3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/9oADAMBDAAIRAxE9AxE6AAdAAAAAAf/Z");
+        /* --- نهاية الخلفية --- */
+
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed; /* الخلفية ثابتة عند التمرير */
         color: var(--text-main);
         min-height: 100vh;
         display: flex;
         justify-content: center;
         align-items: center;
         overflow-x: hidden;
+    }
+
+    /* تأثير الـ Blur على الخلفية خلف المحتوى */
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: inherit;
+        filter: blur(10px); /* درجة التغبيش */
+        z-index: -1;
     }
 
     .shell {
@@ -43,6 +62,7 @@
         display: flex;
         flex-direction: column;
         gap: 20px;
+        z-index: 1; /* فوق الـ Blur */
     }
 
     /* Topbar */
@@ -54,7 +74,7 @@
         border: 1px solid var(--border-glass);
         padding: 15px 25px;
         border-radius: 14px;
-        backdrop-filter: blur(12px);
+        backdrop-filter: blur(15px); /* تأثير زجاجي إضافي */
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     }
 
@@ -111,7 +131,7 @@
         border: 1px solid var(--border-glass);
         border-radius: 16px;
         padding: 30px;
-        backdrop-filter: blur(12px);
+        backdrop-filter: blur(15px);
         box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
         display: flex;
         flex-direction: column;
@@ -141,8 +161,8 @@
 
     /* Status Panel */
     .status-panel {
-        background: rgba(15, 17, 20, 0.6);
-        border: 1px solid rgba(255, 255, 255, 0.05);
+        background: rgba(15, 17, 20, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.04);
         border-radius: 12px;
         padding: 20px;
         text-align: center;
@@ -212,7 +232,7 @@
 
     .fw-card {
         background: var(--card-bg);
-        border: 1px solid rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.05);
         border-radius: 10px;
         padding: 14px;
         text-align: center;
@@ -333,6 +353,7 @@
 </div>
 
 <script>
+    // [كود الجافاسكريبت الأصلي بدون تغيير لضمان عمل الثغرة]
     var msgs = document.getElementById('msgs');
     var runBtn = document.getElementById('runBtn');
 
