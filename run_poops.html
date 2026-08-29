@@ -3,10 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title> شـركة أورجينال أسيـوط -ش الجمهوريـة -بجوار فرع فودافون </title>
+<title>شـركة أورجينال أسيـوط -ش الجمهوريـة -بجوار فرع فودافون</title>
 <style>
     :root {
-        /* تم تقليل التعتيم من 0.85 إلى 0.45 لتصبح الخلفية واضحة جداً */
         --bg-overlay: rgba(13, 14, 16, 0.45);
         --panel-bg: rgba(25, 28, 32, 0.75);
         --border-glass: rgba(255, 255, 255, 0.12);
@@ -24,22 +23,23 @@
     }
 
     body {
+        /* ضبط الخلفية لتتلاءم مع كامل حجم الشاشة والمتصفح بدون تكرار */
         background-image: 
             linear-gradient(var(--bg-overlay), var(--bg-overlay)),
             url("icon0.png");
-        background-size: cover;
+        background-size: 100% 100%; /* تكييف كامل الحجم مع نافذة المتصفح */
         background-position: center;
         background-attachment: fixed;
         background-repeat: no-repeat;
         color: var(--text-main);
         min-height: 100vh;
+        width: 100vw;
         display: flex;
         justify-content: center;
         align-items: center;
         overflow-x: hidden;
     }
 
-    /* تم تقليل التغبيش من 8px إلى 2px فقط لإظهار تفاصيل الصورة بكل وضوح */
     body::before {
         content: "";
         position: fixed;
@@ -61,8 +61,8 @@
 
     .topbar {
         display: flex;
-        justify-content: space-between;
         align-items: center;
+        justify-content: center;
         background: var(--panel-bg);
         border: 1px solid var(--border-glass);
         padding: 15px 25px;
@@ -71,51 +71,12 @@
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
     }
 
-    .brand {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-    }
-
-    .brand-logo {
-        background: linear-gradient(135deg, #2c323b, #111315);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        color: var(--accent);
-        font-weight: 800;
-        font-size: 1.1rem;
-        padding: 10px 14px;
-        border-radius: 10px;
-        box-shadow: inset 0 2px 4px rgba(255,255,255,0.05);
-    }
-
-    .brand-text {
-        display: flex;
-        flex-direction: column;
-    }
-
     .brand-name {
-        font-size: 1.15rem;
+        font-size: 1.3rem;
         font-weight: 700;
-        letter-spacing: 0.5px;
+        letter-spacing: 1.5px;
         color: #ffffff;
-    }
-
-    .brand-sub {
-        font-size: 0.8rem;
-        color: var(--text-sub);
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
-
-    .badge {
-        background: rgba(167, 139, 250, 0.15);
-        border: 1px solid rgba(167, 139, 250, 0.4);
-        color: var(--accent);
-        padding: 6px 14px;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        font-weight: 600;
-        box-shadow: 0 0 15px var(--accent-glow);
+        text-align: center;
     }
 
     .wrap {
@@ -208,7 +169,6 @@
 <div class="shell">
     <header class="topbar">
         <span class="brand-name">شـركة أورجينال أسيـوط -ش الجمهوريـة -بجوار فرع فودافون</span>
-        
     </header>
 
     <main class="wrap">
