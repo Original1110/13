@@ -3,75 +3,332 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>PS4 Exploit Host</title>
-<link rel="stylesheet" href="style.css">
+<title>ORIGINAL | PS4 Exploit Host</title>
+<style>
+    :root {
+        --bg-grad-1: #1a1c1e;
+        --bg-grad-2: #0d0e10;
+        --panel-bg: rgba(30, 34, 38, 0.75);
+        --border-glass: rgba(255, 255, 255, 0.08);
+        --accent: #00d2ff;
+        --accent-glow: rgba(0, 210, 255, 0.3);
+        --text-main: #f0f3f6;
+        --text-sub: #9ba3af;
+        --card-bg: rgba(24, 27, 31, 0.6);
+        --card-active: rgba(0, 210, 255, 0.12);
+        --card-border-active: #00d2ff;
+    }
+
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+        background: radial-gradient(circle at center, var(--bg-grad-1) 0%, var(--bg-grad-2) 100%);
+        color: var(--text-main);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow-x: hidden;
+    }
+
+    .shell {
+        width: 100%;
+        max-width: 960px;
+        padding: 25px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    /* Topbar */
+    .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: var(--panel-bg);
+        border: 1px solid var(--border-glass);
+        padding: 15px 25px;
+        border-radius: 14px;
+        backdrop-filter: blur(12px);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+
+    .brand {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .brand-logo {
+        background: linear-gradient(135deg, #2c323b, #111315);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        color: var(--accent);
+        font-weight: 800;
+        font-size: 1.1rem;
+        padding: 10px 14px;
+        border-radius: 10px;
+        box-shadow: inset 0 2px 4px rgba(255,255,255,0.05);
+    }
+
+    .brand-text {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .brand-name {
+        font-size: 1.15rem;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        color: #ffffff;
+    }
+
+    .brand-sub {
+        font-size: 0.8rem;
+        color: var(--text-sub);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .badge {
+        background: rgba(0, 210, 255, 0.1);
+        border: 1px solid rgba(0, 210, 255, 0.3);
+        color: var(--accent);
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        box-shadow: 0 0 15px var(--accent-glow);
+    }
+
+    /* Main Wrap */
+    .wrap {
+        background: var(--panel-bg);
+        border: 1px solid var(--border-glass);
+        border-radius: 16px;
+        padding: 30px;
+        backdrop-filter: blur(12px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+    }
+
+    .hero {
+        text-align: center;
+    }
+
+    .hero-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 6px;
+        color: #ffffff;
+    }
+
+    .accent {
+        color: var(--accent);
+        text-shadow: 0 0 15px var(--accent-glow);
+    }
+
+    .hero-sub {
+        font-size: 0.95rem;
+        color: var(--text-sub);
+    }
+
+    /* Status Panel */
+    .status-panel {
+        background: rgba(15, 17, 20, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .status-text {
+        font-size: 1rem;
+        font-weight: 500;
+        color: #d1d5db;
+    }
+
+    .status-text.success {
+        color: #34d399;
+    }
+
+    .status-text.error {
+        color: #f87171;
+    }
+
+    /* Buttons */
+    .btn {
+        background: linear-gradient(135deg, #00b4d8, #0077b6);
+        color: #ffffff;
+        border: none;
+        padding: 12px 28px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 180, 216, 0.3);
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 180, 216, 0.5);
+    }
+
+    .hidden {
+        display: none !important;
+    }
+
+    /* Firmware Grid */
+    .fw-section {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .fw-heading {
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: var(--text-sub);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        padding-bottom: 8px;
+    }
+
+    .fw-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+    }
+
+    .fw-card {
+        background: var(--card-bg);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 10px;
+        padding: 14px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        transition: all 0.2s ease;
+    }
+
+    .fw-ver {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #ffffff;
+    }
+
+    .fw-chain {
+        font-size: 0.75rem;
+        padding: 3px 8px;
+        border-radius: 6px;
+        font-weight: 500;
+        width: fit-content;
+        margin: 0 auto;
+    }
+
+    .fw-chain.lapse {
+        background: rgba(245, 158, 11, 0.1);
+        color: #fbbf24;
+        border: 1px solid rgba(245, 158, 11, 0.2);
+    }
+
+    .fw-chain.poops {
+        background: rgba(139, 92, 246, 0.1);
+        color: #a78bfa;
+        border: 1px solid rgba(139, 92, 246, 0.2);
+    }
+
+    .fw-card.active {
+        background: var(--card-active);
+        border-color: var(--card-border-active);
+        box-shadow: 0 0 15px rgba(0, 210, 255, 0.15);
+    }
+
+    /* Footer */
+    .foot {
+        text-align: center;
+        font-size: 0.8rem;
+        color: var(--text-sub);
+        padding-top: 5px;
+    }
+</style>
 </head>
 <body>
 <div class="shell">
     <header class="topbar">
         <div class="brand">
-            <div class="brand-logo">PS4</div>
+            <div class="brand-logo">ORG</div>
             <div class="brand-text">
-                <span class="brand-name">Exploit Host</span>
-                <span class="brand-sub">WebKit Jailbreak</span>
+                <span class="brand-name">ORIGINAL HOST</span>
+                <span class="brand-sub">PlayStation Security</span>
             </div>
         </div>
-        <div class="badge">JB v3.2</div>
+        <div class="badge">PRO v3.2</div>
     </header>
 
     <main class="wrap">
         <section class="hero">
-            <h1 class="hero-title">PS4 <span class="accent">WebKit</span> Exploit Host</h1>
-            <p class="hero-sub">Automatic Detection &amp; Exploit Chain</p>
+            <h1 class="hero-title">ORIGINAL <span class="accent">WebKit</span> Exploit Host</h1>
+            <p class="hero-sub">Automatic Detection &amp; Secure Exploit Chain</p>
         </section>
 
         <section class="status-panel">
-            <span id="msgs" class="status-text loading">⏳ Starting...</span>
-            <br>
+            <span id="msgs" class="status-text loading">⏳ Starting system...</span>
             <button id="runBtn" class="btn hidden" type="button">▶ Run now</button>
         </section>
 
         <section class="fw-section">
-            <h2 class="fw-heading">Supported Firmware</h2>
+            <h2 class="fw-heading">Supported Firmware Versions</h2>
             <div class="fw-grid">
                 <div class="fw-card" data-fw="11.00">
                     <div class="fw-ver">11.00</div>
-                    <span class="fw-chain lapse">Lapse Chain</span>
+                    <span class="fw-chain lapse">Lapse</span>
                 </div>
                 <div class="fw-card" data-fw="11.50">
                     <div class="fw-ver">11.50</div>
-                    <span class="fw-chain lapse">Lapse Chain</span>
+                    <span class="fw-chain lapse">Lapse</span>
                 </div>
                 <div class="fw-card" data-fw="11.52">
                     <div class="fw-ver">11.52</div>
-                    <span class="fw-chain lapse">Lapse Chain</span>
+                    <span class="fw-chain lapse">Lapse</span>
                 </div>
                 <div class="fw-card" data-fw="12.00">
                     <div class="fw-ver">12.00</div>
-                    <span class="fw-chain lapse">Lapse Chain</span>
+                    <span class="fw-chain lapse">Lapse</span>
                 </div>
                 <div class="fw-card" data-fw="12.02">
                     <div class="fw-ver">12.02</div>
-                    <span class="fw-chain lapse">Lapse Chain</span>
+                    <span class="fw-chain lapse">Lapse</span>
                 </div>
                 <div class="fw-card" data-fw="12.50">
                     <div class="fw-ver">12.50</div>
-                    <span class="fw-chain poops">Poops Chain</span>
+                    <span class="fw-chain poops">Poops</span>
                 </div>
                 <div class="fw-card" data-fw="12.52">
                     <div class="fw-ver">12.52</div>
-                    <span class="fw-chain poops">Poops Chain</span>
+                    <span class="fw-chain poops">Poops</span>
                 </div>
                 <div class="fw-card" data-fw="13.00">
                     <div class="fw-ver">13.00</div>
-                    <span class="fw-chain poops">Poops Chain</span>
+                    <span class="fw-chain poops">Poops</span>
                 </div>
             </div>
         </section>
     </main>
 
     <footer class="foot">
-        <p>❤️ Special thanks to all scene developers</p>
+        <p>© ORIGINAL - Asyut | Exclusive Development</p>
     </footer>
 </div>
 
@@ -84,7 +341,6 @@
         msgs.className = 'status-text' + (cls ? ' ' + cls : '');
     }
 
-    // ========== كشف الفيرموير ==========
     var uaFull = navigator.userAgent;
     var match = uaFull.match(/PlayStation 4[ \/](\d+)\.(\d+)/i);
     var isPS4 = match !== null;
@@ -106,12 +362,9 @@
         }
     }
 
-    // ========== توجيه مستقر ==========
-    // بدون query string: عنوان الصفحة الهدف يطابق عنوان الكاش بالضبط،
-    // فيعمل التوجيه دون اتصال. كان ?bug=lapse سابقاً يكسر التطابق.
     var redirected = false;
     var reloadedOnce = false;
-    var RELOAD_KEY = 'ps4host_reloaded_v1';
+    var RELOAD_KEY = 'original_host_reloaded_v1';
 
     function redirectToRun() {
         if (redirected || !isPS4 || !bug) return;
@@ -121,12 +374,6 @@
         window.location.replace(target);
     }
 
-    // ========== الكاش (AppCache) ==========
-    // سلوك الاستقرار (يقلّل التحمد في المحاولة الأولى):
-    //  - كاش دافئ (noupdate): بدء تلقائي -- هذه هي الحالة المستقرة.
-    //  - كاش بارد (تثبيت أول): لا بدء تلقائي أبداً، نعرض زر ▶ Run now
-    //    حتى لا تتنافس السلسلة مع تنزيل الكاش على ذاكرة WebKit.
-    //  - خطأ كاش: زر فقط (تشغيل عبر الشبكة) -- لا بدء تلقائي.
     var cacheState = 'unknown';
     var SAFETY_MS = 30000;
 
@@ -156,12 +403,10 @@
         appCache.addEventListener('noupdate', function() {
             cacheState = 'warm';
             updateStatus('✅ Cache ready -- starting...', 'success');
-            // مهلة قصيرة حتى يستقر WebKit ثم نبدأ
             setTimeout(redirectToRun, 600);
         }, false);
         appCache.addEventListener('updateready', function() {
             try { appCache.swapCache(); } catch (e) {}
-            // إعادة تحميل واحدة فقط عند التحديث، ثم نكمل من الكاش الجديد
             if (!reloadedOnce) {
                 reloadedOnce = true;
                 try { sessionStorage.setItem(RELOAD_KEY, '1'); } catch (e) {}
@@ -174,20 +419,18 @@
             }
         }, false);
         appCache.addEventListener('error', function() {
-            // الكاش فشل (لا اتصال أو الخادم مشغول) -- تشغيل عبر الشبكة بيد المستخدم
             cacheState = 'error';
             updateStatus('⚠️ Cache unavailable -- press ▶ Run now (network mode).');
             showRunButton();
         }, false);
         appCache.addEventListener('obsolete', function() {
-            cacheState = 'error';
+            cacheState.error;
             updateStatus('⚠️ Cache obsolete -- press ▶ Run now.');
             showRunButton();
         }, false);
     }
 
     document.addEventListener("DOMContentLoaded", function() {
-        // تمييز كارت الفيرموير المكتشف
         if (key) {
             var cards = document.querySelectorAll('.fw-card');
             for (var i = 0; i < cards.length; i++) {
@@ -210,18 +453,14 @@
         updateStatus('✅ Detected PS4 Firmware: ' + fwVersion
             + ' (' + (bug === 'lapse' ? 'Lapse' : 'Poops') + ' chain)');
 
-        // زر تشغيل يدوي متاح دائماً
         runBtn.className = 'btn';
         runBtn.addEventListener('click', redirectToRun, false);
 
-        // إن لم يوجد AppCache أصلاً نبدأ مباشرة (وضع شبكة)
         if (!appCache) {
             setTimeout(redirectToRun, 400);
             return;
         }
 
-        // شبكة أمان: مع كاش بارد/خاطئ لا نبدأ تلقائياً أبداً،
-        // فقط نؤكد ظهور الزر بعد 30 ثانية كحد أقصى
         setTimeout(function() {
             if (!redirected) {
                 updateStatus('⏳ Cache is slow -- press ▶ Run now when ready.');
