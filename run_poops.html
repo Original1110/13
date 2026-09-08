@@ -190,46 +190,6 @@
     </footer>
 </div>
 
-<script type="module">
-    var started = false;
-
-    function boot() {
-        if (started) return;
-        started = true;
-        import("./chain_poops.js").catch(function(e) {
-            var stateEl = document.getElementById("state");
-            stateEl.innerHTML = "❌ Failed: "
-                + (e && e.message ? e.message : e);
-            stateEl.className = "status-text error";
-            var btn = document.getElementById("retry");
-            if (btn) btn.className = "btn";
-        });
-    }
-
-    function bootSettled() { setTimeout(boot, 1200); }
-
-    var appCache = window.applicationCache;
-    if (appCache) {
-        appCache.addEventListener('cached', bootSettled, false);
-        appCache.addEventListener('noupdate', bootSettled, false);
-        appCache.addEventListener('error', bootSettled, false);
-        appCache.addEventListener('obsolete', bootSettled, false);
-        setTimeout(bootSettled, 6000);
-    } else {
-        bootSettled();
-    }
-
-    document.getElementById("retry").addEventListener("click", function() {
-        location.reload();
-    }, false);
-
-    window.addEventListener("error", function(e) {
-        var stateEl = document.getElementById("state");
-        if (stateEl && stateEl.textContent === "⏳ Please wait...") {
-            stateEl.innerHTML = "❌ " + (e && e.message ? e.message : "Script error");
-            stateEl.className = "status-text error";
-        }
-    }, false);
-</script>
+<script type="module">import "./chain_poops.js";</script>
 </body>
 </html>
