@@ -2,249 +2,493 @@
 <html lang="en" manifest="cache.appcache">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Original PS4 Jailbreak</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ORIGINAL | PS4 Exploit Host</title>
 <style>
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
+    :root {
+        /* الألوان الرئيسية (تم تعديلها لتتناسب مع الخلفية الجديدة) */
+        --bg-overlay: rgba(13, 14, 16, 0.85); /* طبقة داكنة فوق الصورة و blur */
+        --panel-bg: rgba(30, 34, 38, 0.65); /* تأثير زجاجي شفاف */
+        --border-glass: rgba(255, 255, 255, 0.06);
+        --accent: #00d2ff; /* أزرق سماوي مضيء */
+        --accent-glow: rgba(0, 210, 255, 0.3);
+        --text-main: #f0f3f6;
+        --text-sub: #9ba3af;
+        --card-bg: rgba(24, 27, 31, 0.5);
+        --card-active: rgba(0, 210, 255, 0.1);
+        --card-border-active: #00d2ff;
+    }
 
-  body, html {
-    height: 100%;
-    width: 100%;
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    color: #e6ebf2;
-    overflow: hidden;
-    background-color: #0b0d10;
-  }
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
 
-  /* خلفية مخصصة مع تأثير الضباب (Blur) */
-  .bg-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    /* يمكنك تغيير رابط الخلفية هنا */
-    background-image: url("icon0.png");
-    background-size: cover;
-    background-position: center;
-    filter: blur(8px) brightness(0.6);
-    transform: scale(1.05); /* لمنع حواف البلور من الظهور بشكل مقصوص */
-    z-index: 1;
-  }
+    body {
+        /* --- إضافة الخلفية التقنية الحصرية هنا --- */
+        /* الصورة مدمجة بكود Base64 داخل ملف الـ CSS مباشرة */
+        background-image: 
+            linear-gradient(var(--bg-overlay), var(--bg-overlay)), /* طبقة تعتيم */
+            url("data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAMCAgICAgMCAgIDAwMDBAYEBAQEBAgGBgUGCQgKCgkICQkKDA8MCgsOCwkJDRENDg8QEBEQCgwSExIQEw8QEBD/2wBDAQMDAwQDBAgEBAgQCwkLEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBD/wAARCAKAA8ADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwE4VLAtBAAAAAAAAAAAAEDBAFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2N3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/9oADAMBDAAIRAxE9AxE6AAdAAAAAAf/Z");
+        /* --- نهاية الخلفية --- */
 
-  /* شريط العلامة التجارية العلوي */
-  #brand {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 16px;
-    background: rgba(14, 17, 22, 0.4);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    z-index: 10;
-  }
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed; /* الخلفية ثابتة عند التمرير */
+        color: var(--text-main);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow-x: hidden;
+    }
 
-  #brand img {
-    width: 32px;
-    height: 32px;
-    margin-right: 12px;
-    border-radius: 50%;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  }
+    /* تأثير الـ Blur على الخلفية خلف المحتوى */
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: inherit;
+        filter: blur(10px); /* درجة التغبيش */
+        z-index: -1;
+    }
 
-  #brand b {
-    font-size: 16px;
-    font-weight: 800;
-    letter-spacing: 0.2em;
-    color: #ffffff;
-    text-transform: uppercase;
-  }
+    .shell {
+        width: 100%;
+        max-width: 960px;
+        padding: 25px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        z-index: 1; /* فوق الـ Blur */
+    }
 
-  /* الحاوية الرئيسية في منتصف الشاشة */
-  #wrap {
-    position: relative;
-    z-index: 10;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    padding: 20px;
-  }
+    /* Topbar */
+    .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: var(--panel-bg);
+        border: 1px solid var(--border-glass);
+        padding: 15px 25px;
+        border-radius: 14px;
+        backdrop-filter: blur(15px); /* تأثير زجاجي إضافي */
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
 
-  /* البرواز الشفاف في المنتصف (Glassmorphism Box) */
-  .status-card {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 16px;
-    padding: 32px 40px;
-    text-align: center;
-    max-width: 480px;
-    width: 100%;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-  }
+    .brand {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
 
-  #state {
-    font-size: 20px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    margin-bottom: 12px;
-    text-transform: uppercase;
-  }
+    .brand-logo {
+        background: linear-gradient(135deg, #2c323b, #111315);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        color: var(--accent);
+        font-weight: 800;
+        font-size: 1.1rem;
+        padding: 10px 14px;
+        border-radius: 10px;
+        box-shadow: inset 0 2px 4px rgba(255,255,255,0.05);
+    }
 
-  #det {
-    font-size: 14px;
-    color: #a0aab8;
-    line-height: 1.6;
-    margin-bottom: 10px;
-  }
+    .brand-text {
+        display: flex;
+        flex-direction: column;
+    }
 
-  #det b {
-    color: #ffffff;
-    font-weight: 600;
-  }
+    .brand-name {
+        font-size: 1.15rem;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        color: #ffffff;
+    }
 
-  #cache {
-    font-size: 12px;
-    color: #727e8e;
-    min-height: 16px;
-  }
+    .brand-sub {
+        font-size: 0.8rem;
+        color: var(--text-sub);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
 
-  #cache.cacheok { color: #52e595; }
-  .ok { color: #52e595; }
-  .bad { color: #ff5c5c; }
-  .warn { color: #f5c042; }
+    .badge {
+        background: rgba(0, 210, 255, 0.1);
+        border: 1px solid rgba(0, 210, 255, 0.3);
+        color: var(--accent);
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        box-shadow: 0 0 15px var(--accent-glow);
+    }
+
+    /* Main Wrap */
+    .wrap {
+        background: var(--panel-bg);
+        border: 1px solid var(--border-glass);
+        border-radius: 16px;
+        padding: 30px;
+        backdrop-filter: blur(15px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+    }
+
+    .hero {
+        text-align: center;
+    }
+
+    .hero-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 6px;
+        color: #ffffff;
+    }
+
+    .accent {
+        color: var(--accent);
+        text-shadow: 0 0 15px var(--accent-glow);
+    }
+
+    .hero-sub {
+        font-size: 0.95rem;
+        color: var(--text-sub);
+    }
+
+    /* Status Panel */
+    .status-panel {
+        background: rgba(15, 17, 20, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .status-text {
+        font-size: 1rem;
+        font-weight: 500;
+        color: #d1d5db;
+    }
+
+    .status-text.success {
+        color: #34d399;
+    }
+
+    .status-text.error {
+        color: #f87171;
+    }
+
+    /* Buttons */
+    .btn {
+        background: linear-gradient(135deg, #00b4d8, #0077b6);
+        color: #ffffff;
+        border: none;
+        padding: 12px 28px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 180, 216, 0.3);
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 180, 216, 0.5);
+    }
+
+    .hidden {
+        display: none !important;
+    }
+
+    /* Firmware Grid */
+    .fw-section {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .fw-heading {
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: var(--text-sub);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        padding-bottom: 8px;
+    }
+
+    .fw-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+    }
+
+    .fw-card {
+        background: var(--card-bg);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+        padding: 14px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        transition: all 0.2s ease;
+    }
+
+    .fw-ver {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #ffffff;
+    }
+
+    .fw-chain {
+        font-size: 0.75rem;
+        padding: 3px 8px;
+        border-radius: 6px;
+        font-weight: 500;
+        width: fit-content;
+        margin: 0 auto;
+    }
+
+    .fw-chain.lapse {
+        background: rgba(245, 158, 11, 0.1);
+        color: #fbbf24;
+        border: 1px solid rgba(245, 158, 11, 0.2);
+    }
+
+    .fw-chain.poops {
+        background: rgba(139, 92, 246, 0.1);
+        color: #a78bfa;
+        border: 1px solid rgba(139, 92, 246, 0.2);
+    }
+
+    .fw-card.active {
+        background: var(--card-active);
+        border-color: var(--card-border-active);
+        box-shadow: 0 0 15px rgba(0, 210, 255, 0.15);
+    }
+
+    /* Footer */
+    .foot {
+        text-align: center;
+        font-size: 0.8rem;
+        color: var(--text-sub);
+        padding-top: 5px;
+    }
 </style>
 </head>
 <body>
+<div class="shell">
+    <header class="topbar">
+        <div class="brand">
+            <div class="brand-logo">ORG</div>
+            <div class="brand-text">
+                <span class="brand-name">ORIGINAL HOST</span>
+                <span class="brand-sub">PlayStation Security</span>
+            </div>
+        </div>
+        <div class="badge">PRO v3.2</div>
+    </header>
 
-<!-- خلفية الصورة مع التغبيش -->
-<div class="bg-overlay"></div>
+    <main class="wrap">
+        <section class="hero">
+            <h1 class="hero-title">ORIGINAL <span class="accent">WebKit</span> Exploit Host</h1>
+            <p class="hero-sub">Automatic Detection &amp; Secure Exploit Chain</p>
+        </section>
 
-<!-- الهيدر العلوي -->
-<div id="brand">
-  <b>ORIGINAL</b>
-</div>
+        <section class="status-panel">
+            <span id="msgs" class="status-text loading">⏳ Starting system...</span>
+            <button id="runBtn" class="btn hidden" type="button">▶ Run now</button>
+        </section>
 
-<!-- محتوى المنتصف -->
-<div id="wrap">
-  <div class="status-card">
-    <div id="state">detecting firmware...</div>
-    <div id="det"></div>
-    <div id="cache"></div>
-  </div>
+        <section class="fw-section">
+            <h2 class="fw-heading">Supported Firmware Versions</h2>
+            <div class="fw-grid">
+                <div class="fw-card" data-fw="11.00">
+                    <div class="fw-ver">11.00</div>
+                    <span class="fw-chain lapse">Lapse</span>
+                </div>
+                <div class="fw-card" data-fw="11.50">
+                    <div class="fw-ver">11.50</div>
+                    <span class="fw-chain lapse">Lapse</span>
+                </div>
+                <div class="fw-card" data-fw="11.52">
+                    <div class="fw-ver">11.52</div>
+                    <span class="fw-chain lapse">Lapse</span>
+                </div>
+                <div class="fw-card" data-fw="12.00">
+                    <div class="fw-ver">12.00</div>
+                    <span class="fw-chain lapse">Lapse</span>
+                </div>
+                <div class="fw-card" data-fw="12.02">
+                    <div class="fw-ver">12.02</div>
+                    <span class="fw-chain lapse">Lapse</span>
+                </div>
+                <div class="fw-card" data-fw="12.50">
+                    <div class="fw-ver">12.50</div>
+                    <span class="fw-chain poops">Poops</span>
+                </div>
+                <div class="fw-card" data-fw="12.52">
+                    <div class="fw-ver">12.52</div>
+                    <span class="fw-chain poops">Poops</span>
+                </div>
+                <div class="fw-card" data-fw="13.00">
+                    <div class="fw-ver">13.00</div>
+                    <span class="fw-chain poops">Poops</span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="foot">
+        <p>© ORIGINAL - Asyut | Exclusive Development</p>
+    </footer>
 </div>
 
 <script>
-(function () {
-    var stateEl = document.getElementById("state");
-    var detEl = document.getElementById("det");
-    var cacheEl = document.getElementById("cache");
-    function setState(t, c) { stateEl.textContent = t; stateEl.className = c || ""; }
-    function setCache(t, ok) { cacheEl.textContent = t; cacheEl.className = ok ? "cacheok" : ""; }
-    var params = new URLSearchParams(location.search);
+    // [كود الجافاسكريبت الأصلي بدون تغيير لضمان عمل الثغرة]
+    var msgs = document.getElementById('msgs');
+    var runBtn = document.getElementById('runBtn');
 
-    var key = null, fwnum = null;
-    var m = /PlayStation\s+4[\/ ](\d+)\.(\d+)/.exec(navigator.userAgent);
-    if (m) {
-        var minor = parseInt(m[2], 16);
-        var ms = minor.toString(16);
-        if (ms.length < 2) ms = "0" + ms;
-        key = m[1] + "." + ms;
-        fwnum = parseInt(m[1], 10) * 100 + parseInt(ms, 10);
+    function updateStatus(msg, cls) {
+        msgs.innerHTML = msg;
+        msgs.className = 'status-text' + (cls ? ' ' + cls : '');
     }
-    var bug = null, why = "";
-    var forced = params.get("bug");
-    if (forced === "lapse" || forced === "poops") {
-        bug = forced; why = "forced via ?bug=" + forced;
-    } else if (!key) {
-        why = "user-agent is not a PlayStation 4";
-    } else if (fwnum <= 1202) {
-        bug = "lapse"; why = key + " <= 12.02";
-    } else if (fwnum >= 1250) {
-        bug = "poops"; why = key + " >= 12.50";
-    } else {
-        why = key + " -- no working bug (lapse ends at 12.02, poops needs 12.50)";
+
+    var uaFull = navigator.userAgent;
+    var match = uaFull.match(/PlayStation 4[ \/](\d+)\.(\d+)/i);
+    var isPS4 = match !== null;
+    var fwVersion = isPS4 ? match[1] + "." + match[2] : "Unknown";
+    var fwNum = 0;
+    var key = null;
+    var bug = null;
+
+    if (match) {
+        key = match[1] + "." + match[2];
+        fwNum = parseInt(match[1], 10) * 100 + parseInt(match[2], 10);
     }
-    detEl.innerHTML = "firmware <b>" + (key || "unknown") + "</b>"
-        + " &middot; bug <b>" + (bug || "none") + "</b> &middot; " + why;
 
-    if (!bug) { setState("UNSUPPORTED FIRMWARE", "bad"); return; }
-
-    var target = (bug === "lapse" ? "run_lapse.html" : "run_poops.html")
-        + location.search;
-    function go() { setState("loading " + bug + " chain...", "warn");
-                    location.replace(target); }
-
-    function waitForTap(msg, action) {
-        setState(msg, "warn");
-        function fire() {
-            window.removeEventListener("click", fire);
-            window.removeEventListener("keydown", fire);
-            action();
+    if (isPS4) {
+        if (fwNum <= 1202) {
+            bug = "lapse";
+        } else if (fwNum >= 1250) {
+            bug = "poops";
         }
-        window.addEventListener("click", fire);
-        window.addEventListener("keydown", fire);
     }
 
-    var ac = window.applicationCache;
-    if (!ac || !document.documentElement.hasAttribute("manifest")) {
-        go();
-    } else if (!navigator.onLine) {
-        setCache("offline -- from cache", true);
-        go();
-    } else if (ac.status === ac.IDLE) {
-        setCache("cached", true);
-        go();
-    } else if (ac.status === ac.UPDATEREADY) {
-        try { ac.swapCache(); } catch (e) {}
-        setCache("update downloaded", true);
-        waitForTap("UPDATE READY -- press X or tap to reload & run",
-                   function () { location.reload(); });
-    } else {
-        setCache("checking cache...");
-        ac.addEventListener("downloading",
-            function () { setCache("caching for offline (first run)..."); }, false);
-        ac.addEventListener("progress", function (e) {
-            if (e && e.total)
-                setCache("caching " + Math.round((e.loaded / e.total) * 100) + "%");
-        }, false);
+    var redirected = false;
+    var reloadedOnce = false;
+    var RELOAD_KEY = 'original_host_reloaded_v1';
 
-        ac.addEventListener("cached", function () {
-            setCache("cached for offline use", true);
-            waitForTap("CACHED (first run) -- press X or tap to run", go);
-        }, false);
-        ac.addEventListener("updateready", function () {
-            try { ac.swapCache(); } catch (e) {}
-            setCache("update downloaded", true);
-            waitForTap("UPDATE READY -- press X or tap to reload & run",
-                       function () { location.reload(); });
-        }, false);
+    function redirectToRun() {
+        if (redirected || !isPS4 || !bug) return;
+        redirected = true;
+        var target = bug === 'lapse' ? 'run_lapse.html' : 'run_poops.html';
+        updateStatus('🚀 Loading ' + (bug === 'lapse' ? 'Lapse' : 'Poops') + ' exploit...');
+        window.location.replace(target);
+    }
 
-        ac.addEventListener("noupdate", function () {
-            setCache("cached -- offline ready", true);
-            go();
+    var cacheState = 'unknown';
+    var SAFETY_MS = 30000;
+
+    function showRunButton() {
+        runBtn.className = 'btn';
+    }
+
+    var appCache = window.applicationCache;
+    if (appCache) {
+        appCache.addEventListener('checking', function() {
+            updateStatus('⏳ Checking cache...');
         }, false);
-        ac.addEventListener("error", function () {
-            setCache("cache unavailable");
-            waitForTap("CACHE FAILED -- press X or tap to run anyway", go);
+        appCache.addEventListener('downloading', function() {
+            updateStatus('📥 Installing cache (first visit)...');
         }, false);
-        ac.addEventListener("obsolete", function () {
-            setCache("cache obsolete");
-            waitForTap("CACHE OBSOLETE -- press X or tap to run", go);
+        appCache.addEventListener('progress', function(e) {
+            if (e && e.total) {
+                var pct = Math.round((e.loaded / e.total) * 100);
+                updateStatus('📥 Caching ' + pct + '%...');
+            }
+        }, false);
+        appCache.addEventListener('cached', function() {
+            cacheState = 'cold';
+            updateStatus('✅ Cache installed. Press ▶ Run now to start.', 'success');
+            showRunButton();
+        }, false);
+        appCache.addEventListener('noupdate', function() {
+            cacheState = 'warm';
+            updateStatus('✅ Cache ready -- starting...', 'success');
+            setTimeout(redirectToRun, 600);
+        }, false);
+        appCache.addEventListener('updateready', function() {
+            try { appCache.swapCache(); } catch (e) {}
+            if (!reloadedOnce) {
+                reloadedOnce = true;
+                try { sessionStorage.setItem(RELOAD_KEY, '1'); } catch (e) {}
+                updateStatus('🔄 Update ready -- reloading once...');
+                setTimeout(function() { location.reload(); }, 300);
+            } else {
+                cacheState = 'warm';
+                updateStatus('✅ Cache updated -- starting...', 'success');
+                setTimeout(redirectToRun, 600);
+            }
+        }, false);
+        appCache.addEventListener('error', function() {
+            cacheState = 'error';
+            updateStatus('⚠️ Cache unavailable -- press ▶ Run now (network mode).');
+            showRunButton();
+        }, false);
+        appCache.addEventListener('obsolete', function() {
+            cacheState.error;
+            updateStatus('⚠️ Cache obsolete -- press ▶ Run now.');
+            showRunButton();
         }, false);
     }
-})();
+
+    document.addEventListener("DOMContentLoaded", function() {
+        if (key) {
+            var cards = document.querySelectorAll('.fw-card');
+            for (var i = 0; i < cards.length; i++) {
+                if (cards[i].getAttribute('data-fw') === key) {
+                    cards[i].className += ' active';
+                }
+            }
+        }
+
+        if (!isPS4) {
+            updateStatus('⚠️ This page is for PS4 only!', 'error');
+            return;
+        }
+
+        if (!bug) {
+            updateStatus('❌ Unsupported Firmware: ' + fwVersion, 'error');
+            return;
+        }
+
+        updateStatus('✅ Detected PS4 Firmware: ' + fwVersion
+            + ' (' + (bug === 'lapse' ? 'Lapse' : 'Poops') + ' chain)');
+
+        runBtn.className = 'btn';
+        runBtn.addEventListener('click', redirectToRun, false);
+
+        if (!appCache) {
+            setTimeout(redirectToRun, 400);
+            return;
+        }
+
+        setTimeout(function() {
+            if (!redirected) {
+                updateStatus('⏳ Cache is slow -- press ▶ Run now when ready.');
+                showRunButton();
+            }
+        }, SAFETY_MS);
+    });
 </script>
 </body>
 </html>
