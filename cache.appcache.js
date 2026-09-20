@@ -413,7 +413,7 @@ PS4["13.50"] = {
   fw_status:
     "state=663-JB-PROVEN-on-hw webkit=13.00-module libkernel=13.50-stubs " +
     "kernel_rvas=MEASURED-from-kernel_1350.elf (kderive 16/16, adversarial 16/16 GO) " +
-    "kpatch=1350.bin-BUILT-10/10-neg-controls-pass-UNTESTED-on-hw payload=payload2.bin-PS4HEN(works<=13.52) bug=663",
+    "kpatch=1350.bin-BUILT-10/10-neg-controls-pass-UNTESTED-on-hw payload=payload.bin-PS4HEN(works<=13.52) bug=663",
 
   wk_expm1_builtin: 0x2586880,
   wk_JSFunction_m_function: 0x28,
@@ -504,7 +504,7 @@ PS4["13.50"] = {
   k_prison0: 0x1a5c0c0,
   k_rootvnode: 0x2136e90,
   kpatch: "1350.bin", // BUILT (anchored in kernel_1350.elf); kpatch.js 10/10, both neg controls refuse; UNTESTED on hw
-  payload: "payload2.bin", // PS4-HEN, works through 13.52
+  payload: "payload.bin", // PS4-HEN, works through 13.52
 };
 
 PS4["13.52"] = Object.assign({}, PS4["13.50"], {
@@ -531,12 +531,12 @@ PS4["13.52"] = Object.assign({}, PS4["13.50"], {
 
   kpatch: "1352.bin",
 
-  payload: "goldhen.bin",
+  payload: "payload.bin",
   fw_status:
     "state=663-LIVE-on-hardware shares=13.50 (webkit+libkernel) " +
     "kernel_rvas=MEASURED-from-kernel_1352.elf (kdump5 tier1 36MB pass=39/0, " +
     "kderive 16/16 recipes) kpatch=1352.bin-24-sites-verified-OFFLINE-ONLY " +
-    "payload=payload2.bin-PS4HEN-native-1352 (patched-GoldHEN KP'd 2/2) " +
+    "payload=payload.bin-PS4HEN-native-1352 (patched-GoldHEN KP'd 2/2) " +
     "bug=663",
 });
 
@@ -560,11 +560,11 @@ PS4["13.02"] = Object.assign({}, PS4["13.00"], {
   k_prison0: 0x1a5c0c0,
   k_rootvnode: 0x2136e90,
   kpatch: "1302.bin", // ported from 1300.c, 18 sites +0x10; HW-PROVEN on 13.02 (KEXEC rc=0, pass=51)
-  payload: "payload2.bin", // PS4-HEN, works through 13.52; replaces the non-shipped 13.00 placeholder
+  payload: "payload.bin", // PS4-HEN, works through 13.52; replaces the non-shipped 13.00 placeholder
   fw_status:
     "state=663-JB+KPATCH-PROVEN-on-hw-pass=51 shares=13.00 (webkit+libkernel, PRIMITIVE-OK) " +
     "kernel_rvas=MEASURED-from-kernel_1302.elf (16/16 GO) same-kernel-as=13.04 " +
-    "kpatch=1302.bin-HW-PROVEN-KEXEC-rc0 payload=payload2.bin-PS4HEN(works<=13.52) bug=663",
+    "kpatch=1302.bin-HW-PROVEN-KEXEC-rc0 payload=payload.bin-PS4HEN(works<=13.52) bug=663",
 });
 
 PS4["13.04"] = Object.assign({}, PS4["13.00"], {
@@ -587,11 +587,11 @@ PS4["13.04"] = Object.assign({}, PS4["13.00"], {
   k_prison0: 0x1a5c0c0,
   k_rootvnode: 0x2136e90,
   kpatch: "1302.bin", // SAME kernel as 13.02 -> reuses the one blob (HW-PROVEN on 13.02)
-  payload: "payload2.bin", // PS4-HEN, works through 13.52
+  payload: "payload.bin", // PS4-HEN, works through 13.52
   fw_status:
     "state=663-JB+KPATCH-via-13.02(pass=51) shares=13.00 (webkit+libkernel, PRIMITIVE-OK) " +
     "kernel_rvas=SAME-KERNEL-AS-13.02 (measured from kernel_1302.elf, 16/16 GO) " +
-    "kpatch=1302.bin-shared-HW-PROVEN payload=payload2.bin-PS4HEN(works<=13.52) bug=663",
+    "kpatch=1302.bin-shared-HW-PROVEN payload=payload.bin-PS4HEN(works<=13.52) bug=663",
 });
 // 12.02 IS 12.00 for everything this table describes. The 12.00 block's own
 // fw_status reads "kernel_rvas=verified-vs-kernel_1202.elf" -- those offsets
@@ -627,10 +627,29 @@ PS4["12.52"] = Object.assign({}, PS4["12.50"], {
     kpatch: "1250.bin",
 });
 
+// 11.52 IS 11.50: a minor security bump of the same release line. The scene
+// treats them as WebKit-identical (psdevwiki's FontFace boundary reads
+// "6.00-11.50 ?or 11.52?"), and minor .02/.52 updates are known not to touch
+// libSceNKWebKit.sprx. There is no 11.52 module dump in this repo, so the
+// WebKit side is an ASSERTION, not a measurement -- if a 11.52
+// libSceNKWebKit.sprx ever turns up, re-derive with tools/addfw.js and
+// compare: a moved anchor would fail at stage 1, loudly and harmlessly,
+// rather than corrupting anything.
+//
+// Takes patches/1150.bin, since a 1152.bin does not exist.
+PS4["11.52"] = Object.assign({}, PS4["11.50"], {
+    alias_of: "11.50",
+    fw_status: "state=UNTESTED-on-hardware shares=11.50 "
+        + "webkit=assumed-identical-to-11.50 (no 11.52 module dump) "
+        + "kernel_rvas=assumed-identical-to-11.50 UNVERIFIED "
+        + "kpatch=1150.bin bug=lapse",
+    kpatch: "1150.bin",
+});
+
 export function offsetsFor(uaString) {
     const m = (uaString || "").match(/PlayStation\s+4[\/ ](\d+)\.(\d+)/);
     if (!m) return { key: null, off: null };
 
-    const key = m[1] + "." + m[2];  // ✅ "12.50", "13.00", "12.02"
+    const key = m[1] + "." + m[2];  // "12.50", "13.00", "12.02"
     return { key, off: PS4[key] || null };
 }
