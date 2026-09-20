@@ -6,11 +6,11 @@
 <title>ORIGINAL | PS4 Exploit Host</title>
 <style>
     :root {
-        /* الألوان الرئيسية (تم تعديلها لتتناسب مع الخلفية الجديدة) */
-        --bg-overlay: rgba(13, 14, 16, 0.85); /* طبقة داكنة فوق الصورة و blur */
-        --panel-bg: rgba(30, 34, 38, 0.65); /* تأثير زجاجي شفاف */
+        /* الألوان الرئيسية */
+        --bg-overlay: rgba(13, 14, 16, 0.85);
+        --panel-bg: rgba(30, 34, 38, 0.65);
         --border-glass: rgba(255, 255, 255, 0.06);
-        --accent: #00d2ff; /* أزرق سماوي مضيء */
+        --accent: #00d2ff;
         --accent-glow: rgba(0, 210, 255, 0.3);
         --text-main: #f0f3f6;
         --text-sub: #9ba3af;
@@ -27,16 +27,12 @@
     }
 
     body {
-        /* --- إضافة الخلفية التقنية الحصرية هنا --- */
-        /* الصورة مدمجة بكود Base64 داخل ملف الـ CSS مباشرة */
         background-image: 
-            linear-gradient(var(--bg-overlay), var(--bg-overlay)), /* طبقة تعتيم */
-            url("data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAMCAgICAgMCAgIDAwMDBAYEBAQEBAgGBgUGCQgKCgkICQkKDA8MCgsOCwkJDRENDg8QEBEQCgwSExIQEw8QEBD/2wBDAQMDAwQDBAgEBAgQCwkLEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBD/wAARCAKAA8ADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwE4VLAtBAAAAAAAAAAAAEDBAFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2N3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/9oADAMBDAAIRAxE9AxE6AAdAAAAAAf/Z");
-        /* --- نهاية الخلفية --- */
-
+            linear-gradient(var(--bg-overlay), var(--bg-overlay)),
+            url("data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAMCAgICAgMCAgIDAwMDBAYEBAQEBAgGBgUGCQgKCgkICQkKDA8MCgsOCwkJDRENDg8QEBEQCgwSExIQEw8QEBD/2wBDAQMDAwQDBAgEBAgQCwkLEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBD/wAARCAKAA8ADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwE4VLAtBAAAAAAAAAAAAEDBAFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKrobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2N3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/9oADAMBDAAIRAxE9AxE6AAdAAAAAAf/Z");
         background-size: cover;
         background-position: center;
-        background-attachment: fixed; /* الخلفية ثابتة عند التمرير */
+        background-attachment: fixed;
         color: var(--text-main);
         min-height: 100vh;
         display: flex;
@@ -45,13 +41,12 @@
         overflow-x: hidden;
     }
 
-    /* تأثير الـ Blur على الخلفية خلف المحتوى */
     body::before {
         content: "";
         position: fixed;
         top: 0; left: 0; right: 0; bottom: 0;
         background: inherit;
-        filter: blur(10px); /* درجة التغبيش */
+        filter: blur(10px);
         z-index: -1;
     }
 
@@ -62,7 +57,7 @@
         display: flex;
         flex-direction: column;
         gap: 20px;
-        z-index: 1; /* فوق الـ Blur */
+        z-index: 1;
     }
 
     /* Topbar */
@@ -74,7 +69,7 @@
         border: 1px solid var(--border-glass);
         padding: 15px 25px;
         border-radius: 14px;
-        backdrop-filter: blur(15px); /* تأثير زجاجي إضافي */
+        backdrop-filter: blur(15px);
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     }
 
@@ -269,6 +264,12 @@
         border: 1px solid rgba(139, 92, 246, 0.2);
     }
 
+    .fw-chain.jb {
+        background: rgba(16, 185, 129, 0.1);
+        color: #34d399;
+        border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+
     .fw-card.active {
         background: var(--card-active);
         border-color: var(--card-border-active);
@@ -343,6 +344,18 @@
                     <div class="fw-ver">13.00</div>
                     <span class="fw-chain poops">Poops</span>
                 </div>
+                <div class="fw-card" data-fw="13.02">
+                    <div class="fw-ver">13.02</div>
+                    <span class="fw-chain jb">JB Chain</span>
+                </div>
+                <div class="fw-card" data-fw="13.50">
+                    <div class="fw-ver">13.50</div>
+                    <span class="fw-chain jb">JB Chain</span>
+                </div>
+                <div class="fw-card" data-fw="13.52">
+                    <div class="fw-ver">13.52</div>
+                    <span class="fw-chain jb">JB Chain</span>
+                </div>
             </div>
         </section>
     </main>
@@ -353,7 +366,6 @@
 </div>
 
 <script>
-    // [كود الجافاسكريبت الأصلي بدون تغيير لضمان عمل الثغرة]
     var msgs = document.getElementById('msgs');
     var runBtn = document.getElementById('runBtn');
 
@@ -378,8 +390,10 @@
     if (isPS4) {
         if (fwNum <= 1202) {
             bug = "lapse";
-        } else if (fwNum >= 1250) {
+        } else if (fwNum >= 1250 && fwNum <= 1300) {
             bug = "poops";
+        } else if (fwNum >= 1302 && fwNum <= 1352) {
+            bug = "jb";
         }
     }
 
@@ -390,8 +404,19 @@
     function redirectToRun() {
         if (redirected || !isPS4 || !bug) return;
         redirected = true;
-        var target = bug === 'lapse' ? 'run_lapse.html' : 'run_poops.html';
-        updateStatus('🚀 Loading ' + (bug === 'lapse' ? 'Lapse' : 'Poops') + ' exploit...');
+        
+        var target = 'run_lapse.html';
+        var name = 'Lapse';
+
+        if (bug === 'poops') {
+            target = 'run_poops.html';
+            name = 'Poops';
+        } else if (bug === 'jb') {
+            target = 'jb.html';
+            name = 'JB';
+        }
+
+        updateStatus('🚀 Loading ' + name + ' exploit...');
         window.location.replace(target);
     }
 
@@ -471,8 +496,8 @@
             return;
         }
 
-        updateStatus('✅ Detected PS4 Firmware: ' + fwVersion
-            + ' (' + (bug === 'lapse' ? 'Lapse' : 'Poops') + ' chain)');
+        var chainName = bug === 'lapse' ? 'Lapse' : (bug === 'poops' ? 'Poops' : 'JB');
+        updateStatus('✅ Detected PS4 Firmware: ' + fwVersion + ' (' + chainName + ' chain)');
 
         runBtn.className = 'btn';
         runBtn.addEventListener('click', redirectToRun, false);
