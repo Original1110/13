@@ -504,7 +504,7 @@ PS4["13.50"] = {
   k_prison0: 0x1a5c0c0,
   k_rootvnode: 0x2136e90,
   kpatch: "1350.bin", // BUILT (anchored in kernel_1350.elf); kpatch.js 10/10, both neg controls refuse; UNTESTED on hw
-  payload: "payload2.bin", // PS4-HEN, works through 13.52
+  payload: "payload.bin", // PS4-HEN, works through 13.52
 };
 
 PS4["13.52"] = Object.assign({}, PS4["13.50"], {
@@ -531,7 +531,7 @@ PS4["13.52"] = Object.assign({}, PS4["13.50"], {
 
   kpatch: "1352.bin",
 
-  payload: "goldhen.bin",
+  payload: "payload.bin",
   fw_status:
     "state=663-LIVE-on-hardware shares=13.50 (webkit+libkernel) " +
     "kernel_rvas=MEASURED-from-kernel_1352.elf (kdump5 tier1 36MB pass=39/0, " +
@@ -587,7 +587,7 @@ PS4["13.04"] = Object.assign({}, PS4["13.00"], {
   k_prison0: 0x1a5c0c0,
   k_rootvnode: 0x2136e90,
   kpatch: "1302.bin", // SAME kernel as 13.02 -> reuses the one blob (HW-PROVEN on 13.02)
-  payload: "payload2.bin", // PS4-HEN, works through 13.52
+  payload: "payload.bin", // PS4-HEN, works through 13.52
   fw_status:
     "state=663-JB+KPATCH-via-13.02(pass=51) shares=13.00 (webkit+libkernel, PRIMITIVE-OK) " +
     "kernel_rvas=SAME-KERNEL-AS-13.02 (measured from kernel_1302.elf, 16/16 GO) " +
