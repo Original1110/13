@@ -23,10 +23,11 @@
     }
 
     body {
+        /* ضبط الخلفية لتتلاءم مع كامل حجم الشاشة والمتصفح بدون تكرار */
         background-image: 
             linear-gradient(var(--bg-overlay), var(--bg-overlay)),
             url("icon0.png");
-        background-size: 100% 100%;
+        background-size: 100% 100%; /* تكييف كامل الحجم مع نافذة المتصفح */
         background-position: center;
         background-attachment: fixed;
         background-repeat: no-repeat;
@@ -62,20 +63,12 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 12px;
         background: var(--panel-bg);
         border: 1px solid var(--border-glass);
         padding: 15px 25px;
         border-radius: 14px;
         backdrop-filter: blur(12px);
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-    }
-
-    .brand-img {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        object-fit: cover;
     }
 
     .brand-name {
@@ -98,97 +91,78 @@
         gap: 25px;
     }
 
+    .hero {
+        text-align: center;
+    }
+
+    .hero-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 6px;
+        color: #ffffff;
+    }
+
+    .accent {
+        color: var(--accent);
+        text-shadow: 0 0 15px var(--accent-glow);
+    }
+
+    .hero-sub {
+        font-size: 0.95rem;
+        color: var(--text-sub);
+    }
+
     .status-panel {
         background: rgba(15, 17, 20, 0.65);
         border: 1px solid rgba(255, 255, 255, 0.08);
         border-radius: 12px;
-        padding: 30px 25px;
+        padding: 25px;
         text-align: center;
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
         gap: 15px;
-        min-height: 120px;
     }
 
-    /* تصميم مؤشر التحميل Spinner بألوان التصميم الجديد */
-    #spin {
-        width: 46px;
-        height: 46px;
-        border: 4px solid rgba(255, 255, 255, 0.1);
-        border-top-color: var(--accent);
-        border-radius: 50%;
-        animation: spin 0.9s linear infinite;
-        box-shadow: 0 0 15px var(--accent-glow);
+    .status-text {
+        font-size: 1.05rem;
+        font-weight: 500;
+        color: #ffffff;
     }
 
-    @keyframes spin {
-        to {
-            transform: rotate(360deg);
-        }
-    }
-
-    #msg {
-        font-size: 1.1rem;
-        font-weight: 600;
+    .status-text.error {
         color: #f87171;
-        display: none;
     }
 
-    #state {
-        display: none;
-        font-size: 1.2rem;
-        font-weight: 700;
-        color: var(--accent);
-        text-shadow: 0 0 10px var(--accent-glow);
-        margin-bottom: 10px;
+    .btn {
+        background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+        color: #ffffff;
+        border: none;
+        padding: 12px 28px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
     }
 
-    #out {
-        display: none;
-        white-space: pre-wrap;
-        font-family: Consolas, monospace;
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(139, 92, 246, 0.6);
+    }
+
+    .hidden {
+        display: none !important;
+    }
+
+    .foot {
+        text-align: center;
         font-size: 0.85rem;
-        line-height: 1.45;
-        background: rgba(10, 12, 15, 0.85);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 8px;
-        padding: 12px 15px;
-        max-height: 300px;
-        overflow-y: auto;
-        color: var(--text-sub);
-        text-align: left;
+        color: #ffffff;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+        padding-top: 5px;
     }
-
-    /* حالة الانتهاء والفشل وسجل الأخطاء Log */
-    body.done #spin {
-        display: none;
-    }
-
-    body.fail #spin {
-        display: none;
-    }
-
-    body.fail #msg {
-        display: block;
-    }
-
-    body.log #spin,
-    body.log #msg {
-        display: none;
-    }
-
-    body.log #state,
-    body.log #out {
-        display: block;
-    }
-
-    /* ألوان حالات السجل */
-    .ok, .safe { color: #4ade80; }
-    .bad, .danger { color: #f87171; }
-    .warn { color: #facc15; }
-    code { color: #93c5fd; }
 </style>
 </head>
 <body>
@@ -205,10 +179,11 @@
         </section>
 
         <section class="status-panel">
-            <span id="state" class="status-text loading">⏳ Please wait...</span>
-            <button id="retry" class="btn hidden" type="button">↻ Retry</button>
+            <div id="spin"></div>
+            <div id="msg">Restart your console</div>
+            <div id="state"></div>
+            <div id="out"></div>
         </section>
-
         <div id="out" style="display:none;"></div>
     </main>
     <footer class="foot">
