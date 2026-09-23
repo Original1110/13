@@ -194,15 +194,26 @@
 <body>
 
 <div class="shell">
+    <header class="topbar">
+        <span class="brand-name">شـركة أورجينال أسيـوط -ش الجمهوريـة -بجوار فرع فودافون</span>
+    </header>
 
     <main class="wrap" id="wrap">
-        <section class="status-panel">
-            <div id="spin"></div>
-            <div id="msg">Restart your console</div>
-            <div id="state"></div>
-            <div id="out"></div>
+       <section class="hero">
+            <h1 class="hero-title">JP <span class="accent">Exploit</span></h1>
+            <p class="hero-sub">Firmware 13.02 - 13.52</p>
         </section>
+
+        <section class="status-panel">
+            <span id="state" class="status-text loading">⏳ Please wait...</span>
+            <button id="retry" class="btn hidden" type="button">↻ Retry</button>
+        </section>
+
+        <div id="out" style="display:none;"></div>
     </main>
+    <footer class="foot">
+        <p>© Developer By Ahmed Abdelsalam </p>
+    </footer>
 </div>
 
 
