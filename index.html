@@ -394,10 +394,12 @@
     if (isPS4) {
         if (fwNum <= 1202) {
             bug = "lapse";
-        } else if (fwNum >= 1250 && fwNum <= 1352) {
+        } else if (fwNum >= 1250 && fwNum <= 13) {
             bug = "poops";
-        } else if (fwNum >= 1400) {
+        } else if (fwNum >= 1302 && fwNum <= 1352) {
             bug = "jb";
+        } else if (fwNum >= 1400) {
+            bug = "14";
         }
     }
 
@@ -415,9 +417,9 @@
         if (bug === 'poops') {
             target = 'run_poops.html';
             name = 'Poops';
-        } else if (bug === 'jb') {
+        } else if (bug === '14') {
             target = '14.html';
-            name = 'JB';
+            name = '14';
         }
 
         updateStatus('🚀 Loading ' + name + ' exploit...');
