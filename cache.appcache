@@ -3,8 +3,10 @@ CACHE MANIFEST
 
 index.html
 jb.html
+14.html
 run_lapse.html
 run_poops.html
+afterglow.js
 jb.js
 chain_lapse.js
 chain_poops.js
@@ -24,6 +26,7 @@ patches/1300.bin
 patches/1302.bin
 patches/1350.bin
 patches/1352.bin
+patches/1400.bin
 NETWORK:
 *
 
@@ -32,3 +35,4 @@ index.html index.html
 run_lapse.html run_lapse.html
 run_poops.html run_poops.html
 jb.html jb.html
+14.html 14.html
