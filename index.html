@@ -346,19 +346,19 @@
                 </div>
                 <div class="fw-card" data-fw="13.02">
                     <div class="fw-ver">13.02</div>
-                    <span class="fw-chain poops">Poops</span>
+                    <span class="fw-chain jb">JB</span>
                 </div>
                 <div class="fw-card" data-fw="13.50">
                     <div class="fw-ver">13.50</div>
-                    <span class="fw-chain poops">Poops</span>
+                    <span class="fw-chain jb">JB</span>
                 </div>
                 <div class="fw-card" data-fw="13.52">
                     <div class="fw-ver">13.52</div>
-                    <span class="fw-chain poops">Poops</span>
+                    <span class="fw-chain jb">JB</span>
                 </div>
                 <div class="fw-card" data-fw="14.00">
                     <div class="fw-ver">14.00</div>
-                    <span class="fw-chain jb">JB Chain</span>
+                    <span class="fw-chain jb">JB</span>
                 </div>
             </div>
         </section>
@@ -394,12 +394,12 @@
     if (isPS4) {
         if (fwNum <= 1202) {
             bug = "lapse";
-        } else if (fwNum >= 1250 && fwNum <= 13) {
+        } else if (fwNum >= 1250 && fwNum <= 1300) {
             bug = "poops";
         } else if (fwNum >= 1302 && fwNum <= 1352) {
             bug = "jb";
         } else if (fwNum >= 1400) {
-            bug = "14";
+            bug = "v14";
         }
     }
 
@@ -417,9 +417,12 @@
         if (bug === 'poops') {
             target = 'run_poops.html';
             name = 'Poops';
-        } else if (bug === '14') {
+        } else if (bug === 'jb') {
+            target = 'jb.html';
+            name = 'JB';
+        } else if (bug === 'v14') {
             target = '14.html';
-            name = '14';
+            name = 'Firmware 14';
         }
 
         updateStatus('🚀 Loading ' + name + ' exploit...');
@@ -502,7 +505,7 @@
             return;
         }
 
-        var chainName = bug === 'lapse' ? 'Lapse' : (bug === 'poops' ? 'Poops' : 'JB');
+        var chainName = bug === 'lapse' ? 'Lapse' : (bug === 'poops' ? 'Poops' : (bug === 'jb' ? 'JB' : 'Firmware 14'));
         updateStatus('✅ Detected PS4 Firmware: ' + fwVersion + ' (' + chainName + ' chain)');
 
         runBtn.className = 'btn';
