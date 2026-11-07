@@ -127,7 +127,7 @@ function picked() {
 function go() {
   if (gone) return;
   gone = true;
-  location.href = "jb.html?" + TARGET[picked()];
+  location.href = "14.html?" + TARGET[picked()];
 }
 
 function offline() {
