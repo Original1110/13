@@ -2348,12 +2348,9 @@ async function attempt(ctx, opts) {
       : "the handles are NOT defused -- do not let this page close");
 
   const want = (ctx.params && ctx.params.get("payload"));
-  const mode = (ctx.params && ctx.params.get("mode")) || "";
-  if (want !== "") {
-    iface.payload = (mode === "goldhen")
-      ? await loadEnabler(want || "payload.bin", k, kbase, hostFree)
-      : await loadPayload(want || "hen.bin");
-  }
+  // جعل payload.bin هو الخيار الافتراضي تلقائياً
+const mode = params.get("mode") || "payload";
+const PAYLOAD_FILE = mode === "payload" ? "payload.bin" : (mode + ".bin");
   say("done -- jailbroken, rwx open, syscall 11 is a kexec gate"
       + (iface.payload ? ", enabler running" : ""));
   return iface;
