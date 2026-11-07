@@ -593,6 +593,43 @@ PS4["13.04"] = Object.assign({}, PS4["13.00"], {
     "kernel_rvas=SAME-KERNEL-AS-13.02 (measured from kernel_1302.elf, 16/16 GO) " +
     "kpatch=1302.bin-shared-HW-PROVEN payload=payload.bin-PS4HEN(works<=13.52) bug=663",
 });
+
+PS4["14.00"] = Object.assign({}, PS4["13.52"], {
+  alias_of: "13.52-webkit",
+
+  // Reported on screen on every run, so it names what actually runs: the
+  // kernel stage comes from afterglow, and the payload is picked by ?mode.
+  fw_status:
+    "state=14.00 " +
+    "webkit=13.52-identical " +
+    "kernel=afterglow (apm-UAF, own kernel stage) " +
+    "payload=",
+
+  k_stubs: undefined,
+  wk___imp_pthread_create: undefined,
+  k_pthread_create: undefined,
+
+  k_idt_rsvd: undefined,
+  k_sysctl_handle_int: undefined,
+  k_jmp_rsi: undefined,
+  k_kl_lock: undefined,
+  k_evf_cv: undefined,
+  k_sysent: undefined,
+  k_sysent_661: undefined,
+
+  k_oid_kern_file: undefined,
+  k_oid_maxfilesperproc: undefined,
+  k_oid_maxprocperuid: undefined,
+  k_oid_maxfiles: undefined,
+
+  k_arg1_maxfilesperproc: undefined,
+  k_arg1_maxprocperuid: undefined,
+  k_arg1_maxfiles: undefined,
+
+  k_prison0: undefined,
+  k_rootvnode: undefined,
+});
+
 // 12.02 IS 12.00 for everything this table describes. The 12.00 block's own
 // fw_status reads "kernel_rvas=verified-vs-kernel_1202.elf" -- those offsets
 // were derived from the 12.02 kernel in the first place. Same WebKit gadgets,
@@ -644,42 +681,6 @@ PS4["11.52"] = Object.assign({}, PS4["11.50"], {
         + "kernel_rvas=assumed-identical-to-11.50 UNVERIFIED "
         + "kpatch=1150.bin bug=lapse",
     kpatch: "1150.bin",
-});
-
-PS4["14.00"] = Object.assign({}, PS4["13.52"], {
-  alias_of: "13.52-webkit",
-
-  // Reported on screen on every run, so it names what actually runs: the
-  // kernel stage comes from afterglow, and the payload is picked by ?mode.
-  fw_status:
-    "state=14.00 " +
-    "webkit=13.52-identical " +
-    "kernel=afterglow (apm-UAF, own kernel stage) " +
-    "payload=payload.bin|payload.bin",
-
-  k_stubs: undefined,
-  wk___imp_pthread_create: undefined,
-  k_pthread_create: undefined,
-
-  k_idt_rsvd: undefined,
-  k_sysctl_handle_int: undefined,
-  k_jmp_rsi: undefined,
-  k_kl_lock: undefined,
-  k_evf_cv: undefined,
-  k_sysent: undefined,
-  k_sysent_661: undefined,
-
-  k_oid_kern_file: undefined,
-  k_oid_maxfilesperproc: undefined,
-  k_oid_maxprocperuid: undefined,
-  k_oid_maxfiles: undefined,
-
-  k_arg1_maxfilesperproc: undefined,
-  k_arg1_maxprocperuid: undefined,
-  k_arg1_maxfiles: undefined,
-
-  k_prison0: undefined,
-  k_rootvnode: undefined,
 });
 
 
