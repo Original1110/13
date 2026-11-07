@@ -523,10 +523,11 @@ let mainMf = null,
     // With its own kernel stage, afterglow carries its own patch set -- one
     // per firmware, patchset-1400.bin and patchset-1352.bin -- and picks the
     // payload from ?mode. The host's names for these never applied here.
- const KPATCH_FILE =
-      "patches/" + (off.kpatch || fwKey.replace(".", "") + ".bin");
-    const PAYLOAD_FILE = off.payload || "payload.bin";
-    const needPatch = ["k_sysent_661", "k_jmp_rsi"].filter(
+ const KPATCH_FILE = OWN_KERNEL_STAGE
+      ? "patches/<fw>.bin (afterglow)"
+      : "patches/" + (off.kpatch || fwKey.replace(".", "") + ".bin");
+    const PAYLOAD_FILE = OWN_KERNEL_STAGE = off.payload || "payload.bin";
+    const needPatch = OWN_KERNEL_STAGE ? [] : ["k_sysent_661", "k_jmp_rsi"].filter(
       (k) => off[k] === undefined,
     );
     if (
