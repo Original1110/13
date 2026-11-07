@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# build 20261108-v4.3
+# build 20261108-v5.1
 
 index.html
 jb.html
@@ -7,6 +7,7 @@ jb.html
 run_lapse.html
 run_poops.html
 afterglow.js
+launch.js
 jb.js
 14.js
 chain_lapse.js
